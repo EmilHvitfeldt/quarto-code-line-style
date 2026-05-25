@@ -1,0 +1,126 @@
+---
+title: "emulating code-line-numbers"
+format:
+  revealjs:
+    width: 1280
+    height: 720
+filters:
+  - code-style
+pagetitle: code-style — emulating code-line-numbers
+echo: false
+code-line-numbers: false
+---
+
+## Why?
+
+Quarto's built-in `code-line-numbers` covers the common case: highlight some
+lines, optionally step through them. `code-style` is a superset — same
+behavior comes out of the `hi` style.
+
+The mapping is one-for-one. Use `code-style` when you outgrow it (custom
+colors, multiple styles per step, the diff preset, labels…).
+
+## Range — `code-line-numbers="3-5"`
+
+````markdown
+```{.r data-code-style="hi:3-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+````
+
+```{.r data-code-style="hi:3-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Disparate lines — `code-line-numbers="2,4"`
+
+````markdown
+```{.r data-code-style="hi:2, hi:4"}
+df |>
+  ...
+```
+````
+
+```{.r data-code-style="hi:2, hi:4"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Progressive — `code-line-numbers="|3|4-5"`
+
+````markdown
+```{.r data-code-style="|hi:3|hi:4-5"}
+df |>
+  ...
+```
+````
+
+Press → to walk through.
+
+```{.r data-code-style="|hi:3|hi:4-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Combined progressive — `code-line-numbers="|2,4|3-5"`
+
+````markdown
+```{.r data-code-style="|hi:2,hi:4|hi:3-5"}
+df |>
+  ...
+```
+````
+
+```{.r data-code-style="|hi:2,hi:4|hi:3-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Where `code-style` goes further
+
+You can pick a different color, stack styles, or attach a label — things
+`code-line-numbers` can't do:
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }
+#|   steps:
+#|     - hi: 2
+#|     - warn: { line: 4, label: "this is the bottleneck" }
+```
+````
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }
+#|   steps:
+#|     - hi: 2
+#|     - warn: { line: 4, label: "this is the bottleneck" }
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```

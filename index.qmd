@@ -98,6 +98,14 @@ standalone page.
 ```
 :::
 
+### [code-line-numbers](examples/code-line-numbers.html) — emulating the built-in {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/code-line-numbers.html" loading="lazy"></iframe>
+```
+:::
+
 ### [html-format](examples/html-format.html) — outside revealjs {.unnumbered}
 
 ::: {.cs-example}
