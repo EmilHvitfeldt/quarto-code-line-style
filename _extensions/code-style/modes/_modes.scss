@@ -1,0 +1,50 @@
+/* Transition modes. The mode class lives on the line wrapper and overrides
+   the default `transition` declaration set by the engine. */
+
+/* none — instant */
+div.sourceCode pre > code > span.cs-mode-none {
+  transition: none;
+}
+
+/* fade — the default, listed explicitly so users can target it */
+div.sourceCode pre > code > span.cs-mode-fade {
+  transition:
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing);
+}
+
+/* slide — translateY in/out alongside opacity */
+div.sourceCode pre > code > span.cs-mode-slide {
+  transition:
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing),
+    transform var(--cs-duration) var(--cs-easing);
+}
+div.sourceCode pre > code > span.cs-mode-slide:not([class*="cs-"]:not(.cs-mode-slide)) {
+  /* unmarked: at rest */
+  transform: translateY(0);
+}
+
+/* wipe — clip-path reveal left → right */
+div.sourceCode pre > code > span.cs-mode-wipe {
+  clip-path: inset(0 0 0 0);
+  transition:
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing),
+    clip-path var(--cs-duration) var(--cs-easing);
+}
+div.sourceCode pre > code > span.cs-mode-wipe.cs-mode-enter {
+  clip-path: inset(0 100% 0 0);
+}
+
+/* morph — a cross-fade hint; the engine pairs it with double-buffered class
+   swaps so consecutive step states blend rather than snap. */
+div.sourceCode pre > code > span.cs-mode-morph {
+  transition:
+    background-color calc(var(--cs-duration) * 1.5) var(--cs-easing),
+    border-color calc(var(--cs-duration) * 1.5) var(--cs-easing),
+    opacity calc(var(--cs-duration) * 1.5) var(--cs-easing);
+}

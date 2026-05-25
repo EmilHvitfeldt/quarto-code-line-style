@@ -79,3 +79,43 @@ df |>
   summarise(m = mean(mpg)) |>
   arrange(desc(m))
 ```
+
+## Named transition modes
+
+`mode: none | fade | slide | wipe | morph`.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   transition: { mode: slide, duration: 500 }
+#|   steps:
+#|     - hi: 2
+#|     - hi: 3
+#|     - hi: 4-5
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Mode per step
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   steps:
+#|     - hi: 2
+#|       transition: { mode: fade }
+#|     - hi: 3
+#|       transition: { mode: wipe, duration: 600 }
+#|     - hi: 4-5
+#|       transition: { mode: morph }
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```

@@ -161,6 +161,8 @@
     return { ...empty, steps: trimmed.split("|").map(parseStringStep) };
   }
 
+  const MODE_CLASSES = ["cs-mode-none", "cs-mode-fade", "cs-mode-slide", "cs-mode-wipe", "cs-mode-morph"];
+
   function applyTransition(el, transition) {
     if (!transition) return;
     if (transition.duration != null) {
@@ -171,6 +173,10 @@
     }
     if (transition.easing) {
       el.style.setProperty("--cs-easing", String(transition.easing));
+    }
+    if (transition.mode) {
+      el.classList.remove(...MODE_CLASSES);
+      el.classList.add("cs-mode-" + transition.mode);
     }
   }
 
