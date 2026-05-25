@@ -37,6 +37,40 @@ div.sourceCode pre > code > span::before {
   }
 }
 
+/* Annotation labels rendered in the right margin. */
+div.sourceCode {
+  position: relative;
+}
+.cs-label {
+  position: absolute;
+  font-family: var(--bs-font-sans-serif, sans-serif);
+  font-size: 0.7em;
+  background: #fff8c4;
+  border: 1px solid #f5b800;
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 5;
+}
+.cs-label::before {
+  content: "";
+  position: absolute;
+  left: -1em;
+  top: 50%;
+  width: 1em;
+  height: 1px;
+  background: #f5b800;
+}
+
+.cs-live {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
 /* Token / column wrappers — inline so they don't take a whole line. */
 div.sourceCode pre > code > span > span.cs-token {
   display: inline;
