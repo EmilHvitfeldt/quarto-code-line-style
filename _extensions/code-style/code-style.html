@@ -283,53 +283,46 @@
     return out;
   }
 
-  // Wrap a [start, end) column range within `lineEl` in a fresh <span>. May
-  // split text nodes. Returns the new wrapper span (or null if range is empty).
+  // Wrap a [start, end) column range within `lineEl`. May split text nodes.
+  // When the range crosses element boundaries (e.g. syntax-highlight spans),
+  // returns multiple sibling wrappers — one per affected text node — so the
+  // caller can apply classes to each.
   function wrapColRange(lineEl, start, end) {
-    if (end <= start) return null;
+    if (end <= start) return [];
     const nodes = collectTextNodes(lineEl);
-    // Find the first text node containing `start`.
-    let firstIdx = -1, lastIdx = -1;
-    for (let i = 0; i < nodes.length; i++) {
-      if (firstIdx < 0 && nodes[i].end > start) firstIdx = i;
-      if (nodes[i].start < end) lastIdx = i;
-    }
-    if (firstIdx < 0 || lastIdx < 0) return null;
+    const wrapped = [];
 
-    // Split the first/last text nodes at the boundaries.
-    const first = nodes[firstIdx];
-    if (start > first.start) {
-      const offset = start - first.start;
-      first.node.splitText(offset);
-      // After splitText, the new second half is the next sibling and holds
-      // what we want; the original `first.node` keeps the prefix.
-      nodes[firstIdx] = { node: first.node.nextSibling, start, end: first.end, text: first.node.nextSibling.nodeValue };
-    }
-    const last = nodes[lastIdx];
-    if (end < last.end) {
-      const offset = end - last.start;
-      last.node.splitText(offset);
-      nodes[lastIdx] = { node: last.node, start: last.start, end, text: last.node.nodeValue };
-    }
+    for (const n of nodes) {
+      if (n.end <= start || n.start >= end) continue;
+      let textNode = n.node;
+      let relStart = Math.max(0, start - n.start);
+      let relEnd = Math.min(n.text.length, end - n.start);
 
-    // Build a span and move the affected nodes into it, in order.
-    const span = document.createElement("span");
-    span.className = "cs-token";
-    const range = document.createRange();
-    range.setStartBefore(nodes[firstIdx].node);
-    range.setEndAfter(nodes[lastIdx].node);
-    range.surroundContents(span);
-    return span;
+      // Trim the head and tail of this text node so it covers exactly the
+      // intersection of [start, end) with this node's column range.
+      if (relStart > 0) {
+        textNode = textNode.splitText(relStart);
+        relEnd -= relStart;
+      }
+      if (relEnd < textNode.nodeValue.length) {
+        textNode.splitText(relEnd);
+      }
+
+      const span = document.createElement("span");
+      span.className = "cs-token";
+      textNode.parentNode.insertBefore(span, textNode);
+      span.appendChild(textNode);
+      wrapped.push(span);
+    }
+    return wrapped;
   }
 
   function wrapTokens(lineEl, { match, cols }) {
     const out = [];
     if (cols) {
-      // cols are 1-indexed; we work in 0-indexed half-open intervals.
       const start = Math.max(0, cols[0] - 1);
       const end = cols[1];
-      const span = wrapColRange(lineEl, start, end);
-      if (span) out.push(span);
+      out.push(...wrapColRange(lineEl, start, end));
       return out;
     }
     if (match != null) {
@@ -337,18 +330,18 @@
       let re;
       try { re = new RegExp(match, "g"); }
       catch (e) { reportError("bad regex: " + match); return out; }
-      // Collect all match ranges first; wrap from last to first so earlier
-      // offsets remain valid as we split text nodes.
       const ranges = [];
       let m;
       while ((m = re.exec(text)) !== null) {
         ranges.push([m.index, m.index + m[0].length]);
         if (m[0].length === 0) re.lastIndex++;
       }
+      // Wrap from last to first so earlier offsets stay valid.
+      const wrapsByRange = [];
       for (let i = ranges.length - 1; i >= 0; i--) {
-        const span = wrapColRange(lineEl, ranges[i][0], ranges[i][1]);
-        if (span) out.unshift(span);
+        wrapsByRange.unshift(wrapColRange(lineEl, ranges[i][0], ranges[i][1]));
       }
+      for (const w of wrapsByRange) out.push(...w);
       return out;
     }
     return out;

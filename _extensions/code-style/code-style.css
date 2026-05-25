@@ -136,41 +136,23 @@ div.sourceCode pre > code > span.cs-mode-morph {
     opacity calc(var(--cs-duration) * 1.5) var(--cs-easing);
 }
 
-/* Preset: diff */
-div.sourceCode pre > code > span.cs-add {
-  background-color: rgba(46, 160, 67, 0.18);
-  border-left-color: #2ea043;
-  --cs-marker: "+";
-}
-div.sourceCode pre > code > span.cs-rem {
-  background-color: rgba(248, 81, 73, 0.18);
-  border-left-color: #f85149;
-  --cs-marker: "−";
-}
-div.sourceCode pre > code > span.cs-chg {
-  background-color: rgba(227, 152, 33, 0.22);
-  border-left-color: #e39821;
-  --cs-marker: "~";
-}
-div.sourceCode pre > code > span.cs-note {
-  background-color: rgba(120, 120, 120, 0.18);
-  border-left-color: #888;
-  opacity: 0.55;
-  --cs-marker: "#";
-}
-div.sourceCode pre > code > span.cs-hi {
-  background-color: rgba(217, 84, 165, 0.20);
-  border-left-color: #d954a5;
-  --cs-marker: "@";
-}
+/* Preset: diff. Background applies wherever the class lands (lines OR tokens);
+   border + gutter marker only on line wrappers. */
+div.sourceCode .cs-add  { background-color: rgba(46, 160, 67, 0.18); }
+div.sourceCode .cs-rem  { background-color: rgba(248, 81, 73, 0.18); }
+div.sourceCode .cs-chg  { background-color: rgba(227, 152, 33, 0.22); }
+div.sourceCode .cs-note { background-color: rgba(120, 120, 120, 0.18); opacity: 0.55; }
+div.sourceCode .cs-hi   { background-color: rgba(217, 84, 165, 0.20); }
+
+div.sourceCode pre > code > span.cs-add  { border-left-color: #2ea043; --cs-marker: "+"; }
+div.sourceCode pre > code > span.cs-rem  { border-left-color: #f85149; --cs-marker: "−"; }
+div.sourceCode pre > code > span.cs-chg  { border-left-color: #e39821; --cs-marker: "~"; }
+div.sourceCode pre > code > span.cs-note { border-left-color: #888;    --cs-marker: "#"; }
+div.sourceCode pre > code > span.cs-hi   { border-left-color: #d954a5; --cs-marker: "@"; }
 
 /* Preset: emphasis */
-div.sourceCode pre > code > span.cs-focus {
-  background-color: rgba(255, 235, 130, 0.30);
-  border-left-color: #f5b800;
-}
-div.sourceCode pre > code > span.cs-dim { opacity: 0.35; }
-div.sourceCode pre > code > span.cs-strong {
-  font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.04);
-}
+div.sourceCode .cs-focus  { background-color: rgba(255, 235, 130, 0.30); }
+div.sourceCode .cs-dim    { opacity: 0.35; }
+div.sourceCode .cs-strong { font-weight: bold; background-color: rgba(0, 0, 0, 0.04); }
+
+div.sourceCode pre > code > span.cs-focus { border-left-color: #f5b800; }
