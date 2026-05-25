@@ -1,0 +1,81 @@
+---
+title: "transitions"
+format:
+  code-style-revealjs:
+    width: 1280
+    height: 720
+pagetitle: code-style — transitions
+echo: false
+code-line-numbers: false
+---
+
+## Default transition (200ms ease)
+
+Press → to step through.
+
+```{.r data-code-style="|hi:2|hi:3|hi:4-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Slow + ease-out (block level)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   transition: { duration: 800, easing: ease-out }
+#|   steps:
+#|     - hi: 2
+#|     - hi: 3
+#|     - hi: 4-5
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Per-step transition
+
+Each step picks its own timing.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   steps:
+#|     - hi: 2
+#|       transition: { duration: 200 }
+#|     - hi: 3
+#|       transition: { duration: 1000, easing: ease-in-out }
+#|     - hi: 4-5
+#|       transition: { duration: 200 }
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Per-style transition
+
+A custom style can carry its own timing.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     slow-focus: { bg: "#fff3bf", duration: 1200, easing: ease-out }
+#|   steps:
+#|     - slow-focus: 3
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```

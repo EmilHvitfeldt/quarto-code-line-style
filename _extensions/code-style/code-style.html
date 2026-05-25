@@ -20,15 +20,17 @@
 
   // Inline style primitives. name -> CSS property name (or special handler).
   const PRIMITIVES = {
-    bg:      "background-color",
-    fg:      "color",
-    gutter:  "border-left-color",
-    opacity: "opacity",
-    weight:  "font-weight",
-    italic:  (v) => v ? { "font-style": "italic" } : {},
-    outline: "outline",
-    marker:  (v) => ({ "--cs-marker": '"' + String(v).replace(/"/g, '\\"') + '"' }),
-    class:   null // handled separately
+    bg:       "background-color",
+    fg:       "color",
+    gutter:   "border-left-color",
+    opacity:  "opacity",
+    weight:   "font-weight",
+    italic:   (v) => v ? { "font-style": "italic" } : {},
+    outline:  "outline",
+    marker:   (v) => ({ "--cs-marker": '"' + String(v).replace(/"/g, '\\"') + '"' }),
+    duration: (v) => ({ "--cs-duration": (typeof v === "number" ? v + "ms" : String(v)) }),
+    easing:   (v) => ({ "--cs-easing": String(v) }),
+    class:    null
   };
 
   function expandInlineStyle(def) {
@@ -98,54 +100,78 @@
     return { from: parseInt(m[1], 10), to: m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10) };
   }
 
+  // A step is { entries: [...], transition: {...}|null }.
   function parseYamlStep(item) {
-    const out = [];
-    if (item == null || typeof item !== "object") return out;
+    const entries = [];
+    let transition = null;
+    if (item == null || typeof item !== "object") return { entries, transition };
     if (item.name && item.at != null) {
       const ranges = Array.isArray(item.at) ? item.at : [item.at];
       for (const r of ranges) {
         const range = parseRange(r);
-        if (range) out.push({ name: item.name, ...range });
+        if (range) entries.push({ name: item.name, ...range });
       }
-      return out;
+      if (item.transition) transition = item.transition;
+      return { entries, transition };
     }
     for (const [name, val] of Object.entries(item)) {
+      if (name === "transition") { transition = val; continue; }
       const ranges = Array.isArray(val) ? val : [val];
       for (const r of ranges) {
         const range = parseRange(r);
-        if (range) out.push({ name, ...range });
+        if (range) entries.push({ name, ...range });
       }
     }
-    return out;
+    return { entries, transition };
   }
 
-  // parseSpec → { steps, inlineStyles, presets }
+  // Compact-string step: no per-step transition.
+  function parseStringStep(payload) {
+    return { entries: parseStep(payload), transition: null };
+  }
+
+  // parseSpec → { steps, inlineStyles, presets, transition }
   function parseSpec(spec) {
-    if (!spec) return { steps: [], inlineStyles: {}, presets: null };
+    const empty = { steps: [], inlineStyles: {}, presets: null, transition: null };
+    if (!spec) return empty;
     const trimmed = spec.trim();
     if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
       try {
         const parsed = JSON.parse(trimmed);
         if (Array.isArray(parsed)) {
-          return { steps: parsed.map(parseYamlStep), inlineStyles: {}, presets: null };
+          return { ...empty, steps: parsed.map(parseYamlStep), transition: null };
         }
         const inlineStyles = parsed.styles || {};
         const presetRaw = parsed.preset;
         const presets = presetRaw == null ? null
           : Array.isArray(presetRaw) ? presetRaw
           : [presetRaw];
+        const transition = parsed.transition || null;
         const stepsRaw = parsed.steps || parsed.items;
         if (Array.isArray(stepsRaw)) {
-          return { steps: stepsRaw.map(parseYamlStep), inlineStyles, presets };
+          return { steps: stepsRaw.map(parseYamlStep), inlineStyles, presets, transition };
         }
-        const { styles, preset, ...rest } = parsed;
-        return { steps: [parseYamlStep(rest)], inlineStyles, presets };
+        const { styles, preset, transition: _t, ...rest } = parsed;
+        return { steps: [parseYamlStep(rest)], inlineStyles, presets, transition };
       } catch (e) {
         reportError("invalid JSON spec: " + e.message);
-        return { steps: [], inlineStyles: {}, presets: null };
+        return empty;
       }
     }
-    return { steps: trimmed.split("|").map(parseStep), inlineStyles: {}, presets: null };
+    return { ...empty, steps: trimmed.split("|").map(parseStringStep) };
+  }
+
+  function applyTransition(el, transition) {
+    if (!transition) return;
+    if (transition.duration != null) {
+      const v = typeof transition.duration === "number"
+        ? transition.duration + "ms"
+        : String(transition.duration);
+      el.style.setProperty("--cs-duration", v);
+    }
+    if (transition.easing) {
+      el.style.setProperty("--cs-easing", String(transition.easing));
+    }
   }
 
   // ---------------------------------------------------------------------------
@@ -236,17 +262,20 @@
   // ---------------------------------------------------------------------------
   // Application
   // ---------------------------------------------------------------------------
-  function applyStatic(codeEl, entries, resolve) {
-    applyEntries(getLineEls(codeEl), entries, resolve);
+  function applyStatic(codeEl, step, resolve) {
+    const lines = getLineEls(codeEl);
+    if (step.transition) {
+      for (const line of lines) applyTransition(line, step.transition);
+    }
+    applyEntries(lines, step.entries, resolve);
   }
 
   function applyProgressive(preEl, codeEl, steps, resolve) {
     const lines = getLineEls(codeEl);
 
-    // Compute total touched set across all steps (for clearing).
     const allTouched = { classes: new Set(), props: new Set() };
     for (const step of steps) {
-      for (const { name } of step) {
+      for (const { name } of step.entries) {
         const r = resolve(name);
         if (!r) continue;
         if (r.type === "class") allTouched.classes.add(r.cls);
@@ -261,7 +290,12 @@
 
     const applyStep = (idx) => {
       clearAll(lines, totalTouched);
-      applyEntries(lines, steps[idx] || [], resolve);
+      const step = steps[idx];
+      if (!step) return;
+      if (step.transition) {
+        for (const line of lines) applyTransition(line, step.transition);
+      }
+      applyEntries(lines, step.entries, resolve);
     };
 
     applyStep(0);
@@ -317,10 +351,14 @@
       currentBlock = preEl.closest("div.sourceCode") || preEl;
       const spec = getSpec(preEl);
       if (!spec) { currentBlock = null; return; }
-      const { steps, inlineStyles, presets } = parseSpec(spec);
+      const { steps, inlineStyles, presets, transition } = parseSpec(spec);
       if (steps.length === 0) { currentBlock = null; return; }
       const presetNames = presets || getPresets(preEl);
       const resolve = makeResolver(presetNames, inlineStyles);
+      if (transition) {
+        const codeEl2 = codeEl;
+        for (const line of getLineEls(codeEl2)) applyTransition(line, transition);
+      }
 
       if (steps.length === 1) {
         applyStatic(codeEl, steps[0], resolve);

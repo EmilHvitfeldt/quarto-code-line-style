@@ -10,10 +10,12 @@ div.sourceCode pre > code > span {
   border-left: 3px solid transparent;
   padding-left: 0.35em;
   margin-left: -0.35em;
+  --cs-duration: 200ms;
+  --cs-easing: ease;
   transition:
-    background-color 200ms ease,
-    border-color 200ms ease,
-    opacity 200ms ease;
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing);
 }
 
 /* Gutter marker — a character/icon that sits in the left padding.
