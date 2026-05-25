@@ -40,17 +40,79 @@ df |>
 
 ## Examples
 
-Each linked deck demonstrates one concept end-to-end.
+Each embedded deck demonstrates one concept end-to-end. Click into a frame
+and use → / ← to walk through progressive specs. Each title links to the
+standalone page.
 
-| Deck | What it shows |
-|------|---------------|
-| [`diff`](examples/diff.html) | the 5 built-in styles (add / rem / chg / note / hi) |
-| [`emphasis`](examples/emphasis.html) | focus / dim / strong |
-| [`custom-styles`](examples/custom-styles.html) | define your own styles inline |
-| [`transitions`](examples/transitions.html) | timing, named modes, presence |
-| [`tokens`](examples/tokens.html) | regex and column targeting |
-| [`annotations`](examples/annotations.html) | margin labels on a leader line |
-| [`html-format`](examples/html-format.html) | works outside revealjs too |
+```{=html}
+<style>
+.cs-example { margin: 1rem 0 2rem; }
+.cs-example h3 { margin-bottom: 0.25rem; }
+.cs-example iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.cs-example iframe.cs-tall { aspect-ratio: auto; height: 600px; }
+</style>
+```
+
+### [diff](examples/diff.html) — the 5 built-in styles {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/diff.html" loading="lazy"></iframe>
+```
+:::
+
+### [emphasis](examples/emphasis.html) — focus / dim / strong {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/emphasis.html" loading="lazy"></iframe>
+```
+:::
+
+### [custom-styles](examples/custom-styles.html) — define your own {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/custom-styles.html" loading="lazy"></iframe>
+```
+:::
+
+### [transitions](examples/transitions.html) — timing, modes, presence {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/transitions.html" loading="lazy"></iframe>
+```
+:::
+
+### [tokens](examples/tokens.html) — regex and column targeting {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/tokens.html" loading="lazy"></iframe>
+```
+:::
+
+### [annotations](examples/annotations.html) — margin labels {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/annotations.html" loading="lazy"></iframe>
+```
+:::
+
+### [html-format](examples/html-format.html) — outside revealjs {.unnumbered}
+
+::: {.cs-example}
+```{=html}
+<iframe src="examples/html-format.html" class="cs-tall" loading="lazy"></iframe>
+```
+:::
 
 ## Authoring forms
 
