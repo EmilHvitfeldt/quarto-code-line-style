@@ -13,6 +13,16 @@ code-line-numbers: false
 
 ## The 5 diff styles
 
+````markdown
+```{.r data-code-style="add:1, rem:2, chg:3, note:4, hi:5"}
+added line
+removed line
+changed line
+commented line
+highlighted line
+```
+````
+
 ```{.r data-code-style="add:1, rem:2, chg:3, note:4, hi:5"}
 added line
 removed line
@@ -21,10 +31,15 @@ commented line
 highlighted line
 ```
 
-Gutter markers double the color so the styles still read on colorblind /
-print output.
-
 ## Static diff
+
+````markdown
+```{.r data-code-style="rem:3, add:3-6"}
+df |>
+  filter(cyl == 6) |>
+  ...
+```
+````
 
 ```{.r data-code-style="rem:3, add:3-6"}
 df |>
@@ -39,7 +54,14 @@ df |>
 
 ## Progressive diff
 
-Press → to walk through the steps.
+````markdown
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+df |>
+  ...
+```
+````
+
+Press → to walk through.
 
 ```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
@@ -53,6 +75,17 @@ df |>
 ```
 
 ## YAML form (executable cell)
+
+````markdown
+```{{r}}
+#| code-style:
+#|   - add: 2-3
+#|   - rem: 5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  ...
+```
+````
 
 ```{r}
 #| echo: true
@@ -71,7 +104,7 @@ mtcars |>
 
 :::: {.columns}
 ::: {.column width="50%"}
-**Before**
+**Before** — `data-code-style="rem:3-5"`
 
 ```{.r data-code-style="rem:3-5"}
 df |>
@@ -83,7 +116,7 @@ df |>
 :::
 
 ::: {.column width="50%"}
-**After**
+**After** — `data-code-style="add:3-6"`
 
 ```{.r data-code-style="add:3-6"}
 df |>

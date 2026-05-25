@@ -13,6 +13,13 @@ code-line-numbers: false
 
 ## A single annotated line
 
+````markdown
+```{{r}}
+#| code-style:
+#|   - hi: { line: 4, label: "this is the bottleneck" }
+```
+````
+
 ```{r}
 #| echo: true
 #| eval: false
@@ -26,6 +33,13 @@ df |>
 ```
 
 ## Annotate a token
+
+````markdown
+```{{r}}
+#| code-style:
+#|   - hi: { line: 4, match: "summarise", label: "replace with .by" }
+```
+````
 
 ```{r}
 #| echo: true
@@ -42,6 +56,18 @@ df |>
 ## Progressive annotations
 
 Each step swaps the label.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   preset: emphasis
+#|   steps:
+#|     - focus: { line: 2, label: "1. filter the data" }
+#|     - focus: { line: 3, label: "2. group it" }
+#|     - focus: { line: 4, label: "3. summarise" }
+#|     - focus: { line: 5, label: "4. order results" }
+```
+````
 
 ```{r}
 #| echo: true

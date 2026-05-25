@@ -15,6 +15,13 @@ code-line-numbers: false
 
 Press → to step through.
 
+````markdown
+```{.r data-code-style="|hi:2|hi:3|hi:4-5"}
+df |>
+  ...
+```
+````
+
 ```{.r data-code-style="|hi:2|hi:3|hi:4-5"}
 df |>
   filter(cyl == 6) |>
@@ -24,6 +31,17 @@ df |>
 ```
 
 ## Slow + ease-out (block level)
+
+````markdown
+```{{r}}
+#| code-style:
+#|   transition: { duration: 800, easing: ease-out }
+#|   steps:
+#|     - hi: 2
+#|     - hi: 3
+#|     - hi: 4-5
+```
+````
 
 ```{r}
 #| echo: true
@@ -43,7 +61,18 @@ df |>
 
 ## Per-step transition
 
-Each step picks its own timing.
+````markdown
+```{{r}}
+#| code-style:
+#|   steps:
+#|     - hi: 2
+#|       transition: { duration: 200 }
+#|     - hi: 3
+#|       transition: { duration: 1000, easing: ease-in-out }
+#|     - hi: 4-5
+#|       transition: { duration: 200 }
+```
+````
 
 ```{r}
 #| echo: true
@@ -67,6 +96,16 @@ df |>
 
 A custom style can carry its own timing.
 
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     slow-focus: { bg: "#fff3bf", duration: 1200, easing: ease-out }
+#|   steps:
+#|     - slow-focus: 3
+```
+````
+
 ```{r}
 #| echo: true
 #| eval: false
@@ -82,30 +121,20 @@ df |>
   arrange(desc(m))
 ```
 
-## Named transition modes
-
-`mode: none | fade | slide | wipe | morph`.
-
-```{r}
-#| echo: true
-#| eval: false
-#| code-style:
-#|   transition: { mode: slide, duration: 500 }
-#|   steps:
-#|     - hi: 2
-#|     - hi: 3
-#|     - hi: 4-5
-df |>
-  filter(cyl == 6) |>
-  group_by(gear) |>
-  summarise(m = mean(mpg)) |>
-  arrange(desc(m))
-```
-
 ## Presence: lines enter and exit
 
 The `diff` preset's `add` and `rem` carry presence semantics. `add` lines
 slide in from height 0; `rem` lines collapse out.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   transition: { duration: 600 }
+#|   steps:
+#|     - rem: 3-5
+#|     - add: 3-6
+```
+````
 
 ```{r}
 #| echo: true
@@ -125,7 +154,51 @@ df |>
   arrange(desc(m))
 ```
 
+## Named transition modes
+
+`mode: none | fade | slide | wipe | morph`.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   transition: { mode: slide, duration: 500 }
+#|   steps:
+#|     - hi: 2
+#|     - hi: 3
+#|     - hi: 4-5
+```
+````
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   transition: { mode: slide, duration: 500 }
+#|   steps:
+#|     - hi: 2
+#|     - hi: 3
+#|     - hi: 4-5
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
 ## Mode per step
+
+````markdown
+```{{r}}
+#| code-style:
+#|   steps:
+#|     - hi: 2
+#|       transition: { mode: fade }
+#|     - hi: 3
+#|       transition: { mode: wipe, duration: 600 }
+#|     - hi: 4-5
+#|       transition: { mode: morph }
+```
+````
 
 ```{r}
 #| echo: true

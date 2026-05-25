@@ -13,6 +13,13 @@ code-line-numbers: false
 
 ## Highlight a token by regex
 
+````markdown
+```{{r}}
+#| code-style:
+#|   - hi: { line: 4, match: "summarise" }
+```
+````
+
 ```{r}
 #| echo: true
 #| eval: false
@@ -29,6 +36,13 @@ df |>
 
 Columns are 1-indexed and inclusive on both ends.
 
+````markdown
+```{{r}}
+#| code-style:
+#|   - hi: { line: 4, cols: 3-12 }
+```
+````
+
 ```{r}
 #| echo: true
 #| eval: false
@@ -44,6 +58,20 @@ df |>
 ## Combine line and token
 
 Line-level emphasis plus a token call-out on top.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     bug: { bg: "#ffd4d4", outline: "1px solid #c00" }
+#|   steps:
+#|     - dim: 1-3
+#|       focus: 4
+#|       bug: { line: 4, match: "mean\\(mpg\\)" }
+#|     - dim: [1-3, 5]
+#|       focus: 4
+```
+````
 
 ```{r}
 #| echo: true

@@ -15,6 +15,18 @@ code-line-numbers: false
 
 Define styles in the cell option and apply them by name. No preset needed.
 
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     warn:  { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
+#|     ghost: { opacity: 0.35 }
+#|   steps:
+#|     - warn: 3
+#|     - ghost: 1-2
+```
+````
+
 ```{r}
 #| echo: true
 #| eval: false
@@ -36,6 +48,17 @@ mtcars |>
 
 A line can be targeted by multiple styles in the same step. Non-conflicting
 properties stack; conflicting properties use spec order — later wins.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     bold-line: { weight: bold }
+#|   steps:
+#|     - hi: 3
+#|       bold-line: 3
+```
+````
 
 ```{r}
 #| echo: true

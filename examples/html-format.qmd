@@ -11,6 +11,13 @@ reveal.js fragments, progressive specs collapse to either the **last** step
 
 ## Last step (default)
 
+````markdown
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+df |>
+  ...
+```
+````
+
 ```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
   filter(cyl == 6) |>
@@ -26,6 +33,14 @@ df |>
 
 Set `data-code-style-static="merged"` to overlay every step's marks at once.
 
+````markdown
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"
+        data-code-style-static="merged"}
+df |>
+  ...
+```
+````
+
 ```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8" data-code-style-static="merged"}
 df |>
   filter(cyl == 6) |>
@@ -38,6 +53,13 @@ df |>
 ```
 
 ## Static still works
+
+````markdown
+```{.r data-code-style="add:2-3, rem:5"}
+df |>
+  ...
+```
+````
 
 ```{.r data-code-style="add:2-3, rem:5"}
 df |>

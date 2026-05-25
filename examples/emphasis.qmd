@@ -13,6 +13,13 @@ code-line-numbers: false
 
 ## Focus a single line
 
+````markdown
+```{.r data-code-style="focus:3" data-code-style-preset="emphasis"}
+df |>
+  ...
+```
+````
+
 ```{.r data-code-style="focus:3" data-code-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
@@ -22,6 +29,12 @@ df |>
 ```
 
 ## Dim everything except the focus
+
+````markdown
+```{.r data-code-style="dim:1-2,focus:3,dim:4-5"
+        data-code-style-preset="emphasis"}
+```
+````
 
 ```{.r data-code-style="dim:1-2,focus:3,dim:4-5" data-code-style-preset="emphasis"}
 df |>
@@ -42,6 +55,17 @@ df |>
 ```
 
 ## YAML form with preset selection
+
+````markdown
+```{{r}}
+#| code-style:
+#|   preset: emphasis
+#|   steps:
+#|     - { dim: 1-2 }
+#|     - { focus: 3, dim: [1-2, 4-5] }
+#|     - { strong: 3, dim: [1-2, 4-5] }
+```
+````
 
 ```{r}
 #| echo: true
