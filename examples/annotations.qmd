@@ -32,27 +32,6 @@ df |>
   arrange(desc(m))
 ```
 
-## Annotate a token
-
-````markdown
-```{{r}}
-#| code-style:
-#|   - hi: { line: 4, match: "summarise", label: "replace with .by" }
-```
-````
-
-```{r}
-#| echo: true
-#| eval: false
-#| code-style:
-#|   - hi: { line: 4, match: "summarise", label: "replace with .by" }
-df |>
-  filter(cyl == 6) |>
-  group_by(gear) |>
-  summarise(m = mean(mpg)) |>
-  arrange(desc(m))
-```
-
 ## Progressive annotations
 
 Each step swaps the label.

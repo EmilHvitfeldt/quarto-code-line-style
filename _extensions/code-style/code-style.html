@@ -98,17 +98,11 @@
   }
 
   function parseRange(val) {
-    // Token or column targeting: { line, match } or { line, cols }
+    // Object form: { line: N, label?: "..." }
     if (val && typeof val === "object" && !Array.isArray(val)) {
       if (val.line == null) { reportError("region object missing `line`"); return null; }
       const line = parseInt(val.line, 10);
       const label = val.label != null ? String(val.label) : null;
-      if (val.match != null) return { from: line, to: line, match: String(val.match), label };
-      if (val.cols != null) {
-        const m = String(val.cols).match(/^(\d+)(?:-(\d+))?$/);
-        if (!m) { reportError("cannot parse cols: " + val.cols); return null; }
-        return { from: line, to: line, cols: [parseInt(m[1], 10), m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10)], label };
-      }
       return { from: line, to: line, label };
     }
     const s = String(val).trim();
@@ -268,85 +262,6 @@
     liveRegion.textContent = text;
   }
 
-  // Walk text nodes under `lineEl` and collect them with their cumulative
-  // column ranges. Returns [{ node, start, end, text }].
-  function collectTextNodes(lineEl) {
-    const out = [];
-    let col = 0;
-    const walker = document.createTreeWalker(lineEl, NodeFilter.SHOW_TEXT);
-    let n;
-    while ((n = walker.nextNode())) {
-      const t = n.nodeValue;
-      out.push({ node: n, start: col, end: col + t.length, text: t });
-      col += t.length;
-    }
-    return out;
-  }
-
-  // Wrap a [start, end) column range within `lineEl`. May split text nodes.
-  // When the range crosses element boundaries (e.g. syntax-highlight spans),
-  // returns multiple sibling wrappers — one per affected text node — so the
-  // caller can apply classes to each.
-  function wrapColRange(lineEl, start, end) {
-    if (end <= start) return [];
-    const nodes = collectTextNodes(lineEl);
-    const wrapped = [];
-
-    for (const n of nodes) {
-      if (n.end <= start || n.start >= end) continue;
-      let textNode = n.node;
-      let relStart = Math.max(0, start - n.start);
-      let relEnd = Math.min(n.text.length, end - n.start);
-
-      // Trim the head and tail of this text node so it covers exactly the
-      // intersection of [start, end) with this node's column range.
-      if (relStart > 0) {
-        textNode = textNode.splitText(relStart);
-        relEnd -= relStart;
-      }
-      if (relEnd < textNode.nodeValue.length) {
-        textNode.splitText(relEnd);
-      }
-
-      const span = document.createElement("span");
-      span.className = "cs-token";
-      textNode.parentNode.insertBefore(span, textNode);
-      span.appendChild(textNode);
-      wrapped.push(span);
-    }
-    return wrapped;
-  }
-
-  function wrapTokens(lineEl, { match, cols }) {
-    const out = [];
-    if (cols) {
-      const start = Math.max(0, cols[0] - 1);
-      const end = cols[1];
-      out.push(...wrapColRange(lineEl, start, end));
-      return out;
-    }
-    if (match != null) {
-      const text = lineEl.textContent;
-      let re;
-      try { re = new RegExp(match, "g"); }
-      catch (e) { reportError("bad regex: " + match); return out; }
-      const ranges = [];
-      let m;
-      while ((m = re.exec(text)) !== null) {
-        ranges.push([m.index, m.index + m[0].length]);
-        if (m[0].length === 0) re.lastIndex++;
-      }
-      // Wrap from last to first so earlier offsets stay valid.
-      const wrapsByRange = [];
-      for (let i = ranges.length - 1; i >= 0; i--) {
-        wrapsByRange.unshift(wrapColRange(lineEl, ranges[i][0], ranges[i][1]));
-      }
-      for (const w of wrapsByRange) out.push(...w);
-      return out;
-    }
-    return out;
-  }
-
   // Apply an array of entries against the given line elements using resolve().
   // Returns the set of (CSS class, prop-name) records touched so we can clear
   // them later for progressive replace semantics.
@@ -357,7 +272,7 @@
     const elementProps = new Map();
 
     for (const entry of entries) {
-      const { name, from, to, match, cols, label } = entry;
+      const { name, from, to, label } = entry;
       const resolved = resolve(name);
       if (!resolved) { reportError("unknown style name: " + name); continue; }
 
@@ -365,15 +280,8 @@
         const lineEl = lines[i - 1];
         if (!lineEl) { reportError("line out of range: " + i); continue; }
 
-        // For token / column targeting, wrap matched substrings in spans and
-        // treat those as the targets.
-        const targets = (match != null || cols != null)
-          ? wrapTokens(lineEl, { match, cols })
-          : [lineEl];
-
-        if (label) {
-          for (const el of targets) attachLabel(el, label);
-        }
+        const targets = [lineEl];
+        if (label) attachLabel(lineEl, label);
 
         for (const el of targets) {
           if (resolved.type === "class") {

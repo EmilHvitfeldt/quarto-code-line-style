@@ -42,9 +42,12 @@ The [overview deck](index.html) links into focused example decks under
 - **emphasis** — focus / dim / strong
 - **custom-styles** — define your own styles inline
 - **transitions** — timing, named modes, presence (enter / exit)
-- **tokens** — regex and column targeting
 - **annotations** — margin labels on a leader line
 - **html-format** — non-revealjs output
+
+For token / regex highlighting inside a line, use
+[flourish](https://github.com/kbodwin/flourish) — code-style stays
+line-oriented.
 
 ## Spec cheatsheet
 
@@ -65,7 +68,7 @@ The [overview deck](index.html) links into focused example decks under
 #|   transition: { duration: 400, mode: slide }
 #|   steps:
 #|     - focus: 3
-#|     - warn: { line: 4, match: "bug", label: "this one" }
+#|     - warn: { line: 4, label: "this one" }
 ```
 
 ## Concepts

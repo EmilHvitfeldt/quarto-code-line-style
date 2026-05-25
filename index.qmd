@@ -90,14 +90,6 @@ standalone page.
 ```
 :::
 
-### [tokens](examples/tokens.html) — regex and column targeting {.unnumbered}
-
-::: {.cs-example}
-```{=html}
-<iframe src="examples/tokens.html" loading="lazy"></iframe>
-```
-:::
-
 ### [annotations](examples/annotations.html) — margin labels {.unnumbered}
 
 ::: {.cs-example}
@@ -140,8 +132,7 @@ standalone page.
 
 - **Style** — name → CSS class (preset) or inline primitives
   (`bg`, `fg`, `gutter`, `opacity`, `weight`, `marker`, `duration`, `easing`).
-- **Region** — `at: 2-3`, `at: { line, match }`, `at: { line, cols }`,
-  or short keys: `add: 2-3`.
+- **Region** — `at: 2-3`, `at: { line, label }`, or short keys: `add: 2-3`.
 - **Step** — top-level list = reveal.js fragments. Single object = static.
 
 ## Accessibility
