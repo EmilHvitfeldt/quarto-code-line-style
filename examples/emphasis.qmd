@@ -1,0 +1,58 @@
+---
+title: "emphasis preset"
+format:
+  code-style-revealjs:
+    width: 1280
+    height: 720
+pagetitle: code-style — emphasis
+echo: false
+code-line-numbers: false
+---
+
+## Focus a single line
+
+```{.r data-code-style="focus:3" data-code-style-preset="emphasis"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Dim everything except the focus
+
+```{.r data-code-style="dim:1-2,focus:3,dim:4-5" data-code-style-preset="emphasis"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Strong call-out
+
+```{.r data-code-style="strong:3" data-code-style-preset="emphasis"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## YAML form with preset selection
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   preset: emphasis
+#|   steps:
+#|     - { dim: 1-2 }
+#|     - { focus: 3, dim: [1-2, 4-5] }
+#|     - { strong: 3, dim: [1-2, 4-5] }
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```

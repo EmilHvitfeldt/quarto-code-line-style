@@ -10,6 +10,11 @@
       chg:  "cs-chg",
       note: "cs-note",
       hi:   "cs-hi"
+    },
+    emphasis: {
+      focus:  "cs-focus",
+      dim:    "cs-dim",
+      strong: "cs-strong"
     }
   };
 
@@ -114,31 +119,33 @@
     return out;
   }
 
-  // parseSpec → { steps, inlineStyles }
+  // parseSpec → { steps, inlineStyles, presets }
   function parseSpec(spec) {
-    if (!spec) return { steps: [], inlineStyles: {} };
+    if (!spec) return { steps: [], inlineStyles: {}, presets: null };
     const trimmed = spec.trim();
     if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
       try {
         const parsed = JSON.parse(trimmed);
         if (Array.isArray(parsed)) {
-          return { steps: parsed.map(parseYamlStep), inlineStyles: {} };
+          return { steps: parsed.map(parseYamlStep), inlineStyles: {}, presets: null };
         }
-        // Object form: { styles?, steps?, items? } or single step object.
         const inlineStyles = parsed.styles || {};
+        const presetRaw = parsed.preset;
+        const presets = presetRaw == null ? null
+          : Array.isArray(presetRaw) ? presetRaw
+          : [presetRaw];
         const stepsRaw = parsed.steps || parsed.items;
         if (Array.isArray(stepsRaw)) {
-          return { steps: stepsRaw.map(parseYamlStep), inlineStyles };
+          return { steps: stepsRaw.map(parseYamlStep), inlineStyles, presets };
         }
-        // Treat the whole object as a single step (minus the `styles` key).
-        const { styles, ...rest } = parsed;
-        return { steps: [parseYamlStep(rest)], inlineStyles };
+        const { styles, preset, ...rest } = parsed;
+        return { steps: [parseYamlStep(rest)], inlineStyles, presets };
       } catch (e) {
         reportError("invalid JSON spec: " + e.message);
-        return { steps: [], inlineStyles: {} };
+        return { steps: [], inlineStyles: {}, presets: null };
       }
     }
-    return { steps: trimmed.split("|").map(parseStep), inlineStyles: {} };
+    return { steps: trimmed.split("|").map(parseStep), inlineStyles: {}, presets: null };
   }
 
   // ---------------------------------------------------------------------------
@@ -310,9 +317,9 @@
       currentBlock = preEl.closest("div.sourceCode") || preEl;
       const spec = getSpec(preEl);
       if (!spec) { currentBlock = null; return; }
-      const { steps, inlineStyles } = parseSpec(spec);
+      const { steps, inlineStyles, presets } = parseSpec(spec);
       if (steps.length === 0) { currentBlock = null; return; }
-      const presetNames = getPresets(preEl);
+      const presetNames = presets || getPresets(preEl);
       const resolve = makeResolver(presetNames, inlineStyles);
 
       if (steps.length === 1) {
