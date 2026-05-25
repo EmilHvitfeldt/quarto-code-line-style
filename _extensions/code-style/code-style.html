@@ -516,6 +516,12 @@
     return raw.split(/[,\s]+/).filter(Boolean);
   }
 
+  function getStaticMode(preEl) {
+    const wrapper = preEl.closest("[data-code-style-static]") || preEl;
+    const raw = wrapper.getAttribute("data-code-style-static");
+    return raw === "merged" ? "merged" : "last";
+  }
+
   function process() {
     const blocks = document.querySelectorAll("pre > code, div.sourceCode pre > code");
     blocks.forEach((codeEl) => {
@@ -534,8 +540,17 @@
 
       if (steps.length === 1) {
         applyStatic(codeEl, steps[0], resolve);
-      } else {
+      } else if (window.Reveal) {
         applyProgressive(preEl, codeEl, steps, resolve);
+      } else {
+        // No Reveal → no fragments. Pick a static collapse strategy.
+        const mode = getStaticMode(preEl);
+        if (mode === "merged") {
+          const merged = { entries: steps.flatMap(s => s.entries), transition: null };
+          applyStatic(codeEl, merged, resolve);
+        } else {
+          applyStatic(codeEl, steps[steps.length - 1], resolve);
+        }
       }
       currentBlock = null;
     });

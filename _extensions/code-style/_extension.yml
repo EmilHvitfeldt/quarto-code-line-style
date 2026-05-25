@@ -9,3 +9,8 @@ contributes:
         - code-style.html
       theme:
         - code-style.scss
+    html:
+      include-after-body:
+        - code-style.html
+      theme:
+        - code-style.scss

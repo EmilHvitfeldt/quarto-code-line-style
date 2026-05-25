@@ -1,0 +1,46 @@
+---
+title: "HTML format"
+format: code-style-html
+---
+
+The same extension works on `format: html` for plain document output. Without
+reveal.js fragments, progressive specs collapse to either the **last** step
+(default) or all steps **merged**.
+
+## Last step (default)
+
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## Merged
+
+Set `data-code-style-static="merged"` to overlay every step's marks at once.
+
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8" data-code-style-static="merged"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## Static still works
+
+```{.r data-code-style="add:2-3, rem:5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
