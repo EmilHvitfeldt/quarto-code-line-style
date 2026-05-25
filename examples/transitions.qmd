@@ -100,6 +100,29 @@ df |>
   arrange(desc(m))
 ```
 
+## Presence: lines enter and exit
+
+The `diff` preset's `add` and `rem` carry presence semantics. `add` lines
+slide in from height 0; `rem` lines collapse out.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   transition: { duration: 600 }
+#|   steps:
+#|     - rem: 3-5
+#|     - add: 3-6
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
 ## Mode per step
 
 ```{r}

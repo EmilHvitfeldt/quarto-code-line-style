@@ -37,6 +37,40 @@ div.sourceCode pre > code > span::before {
   }
 }
 
+/* Presence animations — lines collapsing in / out via height + opacity. */
+div.sourceCode pre > code > span {
+  /* Default state — no collapse. */
+  max-height: 3em;
+  overflow: hidden;
+}
+div.sourceCode pre > code > span.cs-presence-exit {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  transition:
+    max-height var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing),
+    padding var(--cs-duration) var(--cs-easing),
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing);
+}
+div.sourceCode pre > code > span.cs-presence-enter {
+  /* Animates from 0 height to natural size on class removal. */
+  transition:
+    max-height var(--cs-duration) var(--cs-easing),
+    opacity var(--cs-duration) var(--cs-easing),
+    padding var(--cs-duration) var(--cs-easing),
+    background-color var(--cs-duration) var(--cs-easing),
+    border-color var(--cs-duration) var(--cs-easing);
+}
+div.sourceCode pre > code > span.cs-presence-enter.cs-presence-hidden {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 /* Annotation labels rendered in the right margin. */
 div.sourceCode {
   position: relative;

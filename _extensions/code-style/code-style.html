@@ -3,10 +3,12 @@
   // ---------------------------------------------------------------------------
   // Preset registry. name -> CSS class.
   // ---------------------------------------------------------------------------
+  // Preset entries can be either a string (CSS class) or
+  // { cls, presence } when the style implies a presence animation.
   const PRESETS = {
     diff: {
-      add:  "cs-add",
-      rem:  "cs-rem",
+      add:  { cls: "cs-add",  presence: "enter" },
+      rem:  { cls: "cs-rem",  presence: "exit"  },
       chg:  "cs-chg",
       note: "cs-note",
       hi:   "cs-hi"
@@ -62,13 +64,15 @@
   function makeResolver(presetNames, inlineStyles) {
     return function resolve(name) {
       if (inlineStyles && inlineStyles[name]) {
-        return { type: "inline", def: inlineStyles[name] };
+        const def = inlineStyles[name];
+        return { type: "inline", def, presence: def.presence || null };
       }
       for (const p of presetNames) {
         const preset = PRESETS[p];
-        if (preset && preset[name]) {
-          return { type: "class", cls: preset[name] };
-        }
+        if (!preset || !preset[name]) continue;
+        const v = preset[name];
+        if (typeof v === "string") return { type: "class", cls: v, presence: null };
+        return { type: "class", cls: v.cls, presence: v.presence || null };
       }
       return null;
     };
@@ -392,6 +396,18 @@
             Object.assign(existing, props);
             elementProps.set(el, existing);
             for (const k of Object.keys(props)) touchedProps.add(k);
+          }
+          if (resolved.presence === "exit") {
+            el.classList.add("cs-presence-exit");
+            touchedClasses.add("cs-presence-exit");
+          } else if (resolved.presence === "enter") {
+            el.classList.add("cs-presence-enter", "cs-presence-hidden");
+            touchedClasses.add("cs-presence-enter");
+            touchedClasses.add("cs-presence-hidden");
+            // Trigger the transition after the browser registers the hidden state.
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => el.classList.remove("cs-presence-hidden"));
+            });
           }
         }
       }
