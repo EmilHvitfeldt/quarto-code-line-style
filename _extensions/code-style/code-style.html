@@ -1,0 +1,234 @@
+<script type="text/javascript">
+(function () {
+  // ---------------------------------------------------------------------------
+  // Preset registry. A preset maps style-name -> CSS class.
+  // Engine stays preset-agnostic; everything diff-specific lives in the diff
+  // preset's SCSS partial.
+  // ---------------------------------------------------------------------------
+  const PRESETS = {
+    diff: {
+      add:  "cs-add",
+      rem:  "cs-rem",
+      chg:  "cs-chg",
+      note: "cs-note",
+      hi:   "cs-hi"
+    }
+  };
+
+  function resolveStyle(name, presetNames) {
+    for (const p of presetNames) {
+      const preset = PRESETS[p];
+      if (preset && preset[name]) return preset[name];
+    }
+    return null;
+  }
+
+  // ---------------------------------------------------------------------------
+  // Parse a single step's compact payload: "add:2-3, rem:5".
+  // Returns [{ name, from, to }].
+  // ---------------------------------------------------------------------------
+  function parseStep(payload) {
+    const out = [];
+    if (!payload) return out;
+    for (const seg of payload.split(",")) {
+      const s = seg.trim();
+      if (!s) continue;
+      const m = s.match(/^([a-zA-Z][\w-]*):(\d+)(?:-(\d+))?$/);
+      if (!m) {
+        console.warn("[code-style] cannot parse segment:", s);
+        continue;
+      }
+      const name = m[1];
+      const from = parseInt(m[2], 10);
+      const to = m[3] ? parseInt(m[3], 10) : from;
+      out.push({ name, from, to });
+    }
+    return out;
+  }
+
+  // Parse YAML-shaped step (object from JSON-serialized cell option).
+  // { add: "2-3", rem: 5 } or { name: "add", at: "2-3" }.
+  function parseYamlStep(item) {
+    const out = [];
+    if (item == null || typeof item !== "object") return out;
+    if (item.name && item.at != null) {
+      // Long form. at can be "2-3", 5, or [..].
+      const ranges = Array.isArray(item.at) ? item.at : [item.at];
+      for (const r of ranges) {
+        const range = parseRange(r);
+        if (range) out.push({ name: item.name, ...range });
+      }
+      return out;
+    }
+    // Short form: { add: "2-3", rem: 5 }
+    for (const [name, val] of Object.entries(item)) {
+      const ranges = Array.isArray(val) ? val : [val];
+      for (const r of ranges) {
+        const range = parseRange(r);
+        if (range) out.push({ name, ...range });
+      }
+    }
+    return out;
+  }
+
+  function parseRange(val) {
+    const s = String(val).trim();
+    const m = s.match(/^(\d+)(?:-(\d+))?$/);
+    if (!m) {
+      console.warn("[code-style] cannot parse range:", s);
+      return null;
+    }
+    const from = parseInt(m[1], 10);
+    const to = m[2] ? parseInt(m[2], 10) : from;
+    return { from, to };
+  }
+
+  // Parse a full spec. Returns array of steps, each an array of {name, from, to}.
+  function parseSpec(spec) {
+    if (!spec) return [];
+    const trimmed = spec.trim();
+    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        const arr = Array.isArray(parsed) ? parsed : [parsed];
+        return arr.map(parseYamlStep);
+      } catch (e) {
+        console.warn("[code-style] invalid JSON spec:", trimmed, e);
+        return [];
+      }
+    }
+    return trimmed.split("|").map(parseStep);
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM helpers
+  // ---------------------------------------------------------------------------
+  function getLineEls(codeEl) {
+    const spans = codeEl.querySelectorAll(":scope > span[id]");
+    return Array.from(spans);
+  }
+
+  function clearClasses(lines, classes) {
+    for (const el of lines) {
+      el.classList.remove(...classes);
+    }
+  }
+
+  function applyEntries(lines, entries, presetNames, allClasses) {
+    for (const { name, from, to } of entries) {
+      const cls = resolveStyle(name, presetNames);
+      if (!cls) {
+        console.warn("[code-style] unknown style name:", name);
+        continue;
+      }
+      allClasses.add(cls);
+      for (let i = from; i <= to; i++) {
+        const el = lines[i - 1];
+        if (el) el.classList.add(cls);
+      }
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Application
+  // ---------------------------------------------------------------------------
+  function applyStatic(codeEl, ranges, presetNames) {
+    const lines = getLineEls(codeEl);
+    const allClasses = new Set();
+    applyEntries(lines, ranges, presetNames, allClasses);
+  }
+
+  function applyProgressive(preEl, codeEl, steps, presetNames) {
+    const lines = getLineEls(codeEl);
+    const allClasses = new Set();
+    // Pre-scan to know which classes are touched, for clean clears.
+    for (const step of steps) {
+      for (const e of step) {
+        const cls = resolveStyle(e.name, presetNames);
+        if (cls) allClasses.add(cls);
+      }
+    }
+    const classList = [...allClasses];
+
+    const applyStep = (idx) => {
+      clearClasses(lines, classList);
+      const ranges = steps[idx] || [];
+      const dummy = new Set();
+      applyEntries(lines, ranges, presetNames, dummy);
+    };
+
+    applyStep(0);
+
+    for (let i = 1; i < steps.length; i++) {
+      const frag = document.createElement("span");
+      frag.className = "fragment cs-step";
+      frag.setAttribute("data-cs-step", String(i));
+      frag.style.display = "none";
+      preEl.appendChild(frag);
+    }
+
+    if (window.Reveal) {
+      const handler = (e) => {
+        if (!preEl.contains(e.fragment)) return;
+        const idx = parseInt(e.fragment.getAttribute("data-cs-step") || "0", 10);
+        if (e.type === "fragmentshown") applyStep(idx);
+        if (e.type === "fragmenthidden") applyStep(idx - 1);
+      };
+      window.Reveal.on("fragmentshown", handler);
+      window.Reveal.on("fragmenthidden", handler);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Entry point
+  // ---------------------------------------------------------------------------
+  function getSpec(preEl, codeEl) {
+    const wrapper = preEl.closest("[data-code-style], [data-code-line-diff]") || preEl;
+    let spec = wrapper.getAttribute("data-code-style");
+    if (spec) return { spec, source: "code-style" };
+    spec = wrapper.getAttribute("data-code-line-diff");
+    if (spec) {
+      console.warn("[code-style] data-code-line-diff is deprecated, use data-code-style");
+      // Translate old marker grammar → new name grammar.
+      const translated = spec.replace(/([+\-!#@]):/g, (_, m) => {
+        const map = { "+": "add:", "-": "rem:", "!": "chg:", "#": "note:", "@": "hi:" };
+        return map[m];
+      });
+      return { spec: translated, source: "code-line-diff" };
+    }
+    return null;
+  }
+
+  function getPresets(preEl) {
+    const wrapper = preEl.closest("[data-code-style-preset]") || preEl;
+    const raw = wrapper.getAttribute("data-code-style-preset");
+    if (!raw) return ["diff"]; // sensible default
+    return raw.split(/[,\s]+/).filter(Boolean);
+  }
+
+  function process() {
+    const blocks = document.querySelectorAll("pre > code, div.sourceCode pre > code");
+    blocks.forEach((codeEl) => {
+      const preEl = codeEl.parentElement;
+      const got = getSpec(preEl, codeEl);
+      if (!got) return;
+      const steps = parseSpec(got.spec);
+      if (steps.length === 0) return;
+      const presetNames = getPresets(preEl);
+
+      if (steps.length === 1) {
+        applyStatic(codeEl, steps[0], presetNames);
+      } else {
+        applyProgressive(preEl, codeEl, steps, presetNames);
+      }
+    });
+  }
+
+  if (window.Reveal) {
+    if (window.Reveal.isReady && window.Reveal.isReady()) process();
+    else window.Reveal.on("ready", process);
+  } else {
+    document.addEventListener("DOMContentLoaded", process);
+  }
+})();
+</script>

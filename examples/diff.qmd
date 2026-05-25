@@ -1,0 +1,96 @@
+---
+title: "diff preset"
+format:
+  code-style-revealjs:
+    width: 1280
+    height: 720
+pagetitle: code-style — diff
+echo: false
+code-line-numbers: false
+---
+
+## The 5 diff styles
+
+```{.r data-code-style="add:1, rem:2, chg:3, note:4, hi:5"}
+added line
+removed line
+changed line
+commented line
+highlighted line
+```
+
+Gutter markers double the color so the styles still read on colorblind /
+print output.
+
+## Static diff
+
+```{.r data-code-style="rem:3, add:3-6"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## Progressive diff
+
+Press → to walk through the steps.
+
+```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## YAML form (executable cell)
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   - add: 2-3
+#|   - rem: 5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
+## Side-by-side
+
+:::: {.columns}
+::: {.column width="50%"}
+**Before**
+
+```{.r data-code-style="rem:3-5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+:::
+
+::: {.column width="50%"}
+**After**
+
+```{.r data-code-style="add:3-6"}
+df |>
+  filter(cyl == 6) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+:::
+::::

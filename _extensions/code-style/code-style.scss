@@ -1,0 +1,38 @@
+/*-- scss:rules --*/
+
+/* code-style engine: line wrapper geometry + base transitions.
+   Presets layer their own decoration on top via additional classes. */
+
+div.sourceCode pre > code > span {
+  display: inline-block;
+  width: 100%;
+  position: relative;
+  border-left: 3px solid transparent;
+  padding-left: 0.35em;
+  margin-left: -0.35em;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    opacity 200ms ease;
+}
+
+/* Gutter marker — a character/icon that sits in the left padding.
+   Presets supply the content via a CSS custom property. */
+div.sourceCode pre > code > span::before {
+  content: var(--cs-marker, "");
+  position: absolute;
+  left: -0.9em;
+  width: 0.9em;
+  text-align: center;
+  opacity: 0.85;
+  font-weight: bold;
+}
+
+/* Respect user motion preferences. */
+@media (prefers-reduced-motion: reduce) {
+  div.sourceCode pre > code > span {
+    transition: none;
+  }
+}
+
+@import "presets/diff";
