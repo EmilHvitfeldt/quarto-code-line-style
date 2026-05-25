@@ -1,9 +1,7 @@
 <script type="text/javascript">
 (function () {
   // ---------------------------------------------------------------------------
-  // Preset registry. A preset maps style-name -> CSS class.
-  // Engine stays preset-agnostic; everything diff-specific lives in the diff
-  // preset's SCSS partial.
+  // Preset registry. name -> CSS class.
   // ---------------------------------------------------------------------------
   const PRESETS = {
     diff: {
@@ -15,17 +13,62 @@
     }
   };
 
-  function resolveStyle(name, presetNames) {
-    for (const p of presetNames) {
-      const preset = PRESETS[p];
-      if (preset && preset[name]) return preset[name];
+  // Inline style primitives. name -> CSS property name (or special handler).
+  const PRIMITIVES = {
+    bg:      "background-color",
+    fg:      "color",
+    gutter:  "border-left-color",
+    opacity: "opacity",
+    weight:  "font-weight",
+    italic:  (v) => v ? { "font-style": "italic" } : {},
+    outline: "outline",
+    marker:  (v) => ({ "--cs-marker": '"' + String(v).replace(/"/g, '\\"') + '"' }),
+    class:   null // handled separately
+  };
+
+  function expandInlineStyle(def) {
+    // def is e.g. { bg: "#fff", gutter: "#c00", weight: "bold" }
+    // Returns { props: {cssProp -> value}, classes: [extra class names] }
+    const props = {};
+    const classes = [];
+    for (const [key, val] of Object.entries(def || {})) {
+      if (key === "class") {
+        if (Array.isArray(val)) classes.push(...val);
+        else classes.push(String(val));
+        continue;
+      }
+      const handler = PRIMITIVES[key];
+      if (handler == null) {
+        console.warn("[code-style] unknown primitive:", key);
+        continue;
+      }
+      if (typeof handler === "function") {
+        Object.assign(props, handler(val));
+      } else {
+        props[handler] = String(val);
+      }
     }
-    return null;
+    return { props, classes };
+  }
+
+  // Build a resolver bound to (preset list, inline styles map).
+  function makeResolver(presetNames, inlineStyles) {
+    return function resolve(name) {
+      if (inlineStyles && inlineStyles[name]) {
+        return { type: "inline", def: inlineStyles[name] };
+      }
+      for (const p of presetNames) {
+        const preset = PRESETS[p];
+        if (preset && preset[name]) {
+          return { type: "class", cls: preset[name] };
+        }
+      }
+      return null;
+    };
   }
 
   // ---------------------------------------------------------------------------
-  // Parse a single step's compact payload: "add:2-3, rem:5".
-  // Returns [{ name, from, to }].
+  // Parsing
   // ---------------------------------------------------------------------------
   function parseStep(payload) {
     const out = [];
@@ -34,10 +77,7 @@
       const s = seg.trim();
       if (!s) continue;
       const m = s.match(/^([a-zA-Z][\w-]*):(\d+)(?:-(\d+))?$/);
-      if (!m) {
-        console.warn("[code-style] cannot parse segment:", s);
-        continue;
-      }
+      if (!m) { reportError("cannot parse segment: " + s); continue; }
       const name = m[1];
       const from = parseInt(m[2], 10);
       const to = m[3] ? parseInt(m[3], 10) : from;
@@ -46,13 +86,17 @@
     return out;
   }
 
-  // Parse YAML-shaped step (object from JSON-serialized cell option).
-  // { add: "2-3", rem: 5 } or { name: "add", at: "2-3" }.
+  function parseRange(val) {
+    const s = String(val).trim();
+    const m = s.match(/^(\d+)(?:-(\d+))?$/);
+    if (!m) { reportError("cannot parse range: " + s); return null; }
+    return { from: parseInt(m[1], 10), to: m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10) };
+  }
+
   function parseYamlStep(item) {
     const out = [];
     if (item == null || typeof item !== "object") return out;
     if (item.name && item.at != null) {
-      // Long form. at can be "2-3", 5, or [..].
       const ranges = Array.isArray(item.at) ? item.at : [item.at];
       for (const r of ranges) {
         const range = parseRange(r);
@@ -60,7 +104,6 @@
       }
       return out;
     }
-    // Short form: { add: "2-3", rem: 5 }
     for (const [name, val] of Object.entries(item)) {
       const ranges = Array.isArray(val) ? val : [val];
       for (const r of ranges) {
@@ -71,90 +114,147 @@
     return out;
   }
 
-  function parseRange(val) {
-    const s = String(val).trim();
-    const m = s.match(/^(\d+)(?:-(\d+))?$/);
-    if (!m) {
-      console.warn("[code-style] cannot parse range:", s);
-      return null;
-    }
-    const from = parseInt(m[1], 10);
-    const to = m[2] ? parseInt(m[2], 10) : from;
-    return { from, to };
-  }
-
-  // Parse a full spec. Returns array of steps, each an array of {name, from, to}.
+  // parseSpec → { steps, inlineStyles }
   function parseSpec(spec) {
-    if (!spec) return [];
+    if (!spec) return { steps: [], inlineStyles: {} };
     const trimmed = spec.trim();
     if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
       try {
         const parsed = JSON.parse(trimmed);
-        const arr = Array.isArray(parsed) ? parsed : [parsed];
-        return arr.map(parseYamlStep);
+        if (Array.isArray(parsed)) {
+          return { steps: parsed.map(parseYamlStep), inlineStyles: {} };
+        }
+        // Object form: { styles?, steps?, items? } or single step object.
+        const inlineStyles = parsed.styles || {};
+        const stepsRaw = parsed.steps || parsed.items;
+        if (Array.isArray(stepsRaw)) {
+          return { steps: stepsRaw.map(parseYamlStep), inlineStyles };
+        }
+        // Treat the whole object as a single step (minus the `styles` key).
+        const { styles, ...rest } = parsed;
+        return { steps: [parseYamlStep(rest)], inlineStyles };
       } catch (e) {
-        console.warn("[code-style] invalid JSON spec:", trimmed, e);
-        return [];
+        reportError("invalid JSON spec: " + e.message);
+        return { steps: [], inlineStyles: {} };
       }
     }
-    return trimmed.split("|").map(parseStep);
+    return { steps: trimmed.split("|").map(parseStep), inlineStyles: {} };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Error reporting
+  // ---------------------------------------------------------------------------
+  let currentBlock = null;
+  let debugMode = false;
+
+  function isDebug() {
+    if (debugMode) return true;
+    return /[?&]cs-debug=1\b/.test(window.location.search);
+  }
+
+  function reportError(msg) {
+    console.warn("[code-style] " + msg);
+    if (isDebug() && currentBlock) {
+      let banner = currentBlock.previousElementSibling;
+      if (!banner || !banner.classList || !banner.classList.contains("cs-error")) {
+        banner = document.createElement("div");
+        banner.className = "cs-error";
+        banner.style.cssText =
+          "background:#ffe4e1;color:#a00;border:1px solid #f88;padding:4px 8px;" +
+          "font-family:monospace;font-size:0.8em;margin-bottom:4px;border-radius:3px;";
+        currentBlock.parentElement.insertBefore(banner, currentBlock);
+      }
+      banner.appendChild(document.createTextNode("[code-style] " + msg));
+      banner.appendChild(document.createElement("br"));
+    }
   }
 
   // ---------------------------------------------------------------------------
   // DOM helpers
   // ---------------------------------------------------------------------------
   function getLineEls(codeEl) {
-    const spans = codeEl.querySelectorAll(":scope > span[id]");
-    return Array.from(spans);
+    return Array.from(codeEl.querySelectorAll(":scope > span[id]"));
   }
 
-  function clearClasses(lines, classes) {
-    for (const el of lines) {
-      el.classList.remove(...classes);
-    }
-  }
+  // Apply an array of entries against the given line elements using resolve().
+  // Returns the set of (CSS class, prop-name) records touched so we can clear
+  // them later for progressive replace semantics.
+  function applyEntries(lines, entries, resolve) {
+    const touchedClasses = new Set();
+    const touchedProps = new Set();
+    // Per-element accumulator for inline props — later entries win on conflicts.
+    const elementProps = new Map();
 
-  function applyEntries(lines, entries, presetNames, allClasses) {
     for (const { name, from, to } of entries) {
-      const cls = resolveStyle(name, presetNames);
-      if (!cls) {
-        console.warn("[code-style] unknown style name:", name);
-        continue;
-      }
-      allClasses.add(cls);
+      const resolved = resolve(name);
+      if (!resolved) { reportError("unknown style name: " + name); continue; }
+
       for (let i = from; i <= to; i++) {
         const el = lines[i - 1];
-        if (el) el.classList.add(cls);
+        if (!el) { reportError("line out of range: " + i); continue; }
+
+        if (resolved.type === "class") {
+          el.classList.add(resolved.cls);
+          touchedClasses.add(resolved.cls);
+        } else {
+          const { props, classes } = expandInlineStyle(resolved.def);
+          for (const c of classes) {
+            el.classList.add(c);
+            touchedClasses.add(c);
+          }
+          const existing = elementProps.get(el) || {};
+          Object.assign(existing, props);
+          elementProps.set(el, existing);
+          for (const k of Object.keys(props)) touchedProps.add(k);
+        }
       }
+    }
+
+    for (const [el, props] of elementProps) {
+      for (const [k, v] of Object.entries(props)) {
+        el.style.setProperty(k, v);
+      }
+    }
+
+    return { classes: [...touchedClasses], props: [...touchedProps] };
+  }
+
+  function clearAll(lines, touched) {
+    for (const el of lines) {
+      if (touched.classes.length) el.classList.remove(...touched.classes);
+      for (const p of touched.props) el.style.removeProperty(p);
     }
   }
 
   // ---------------------------------------------------------------------------
   // Application
   // ---------------------------------------------------------------------------
-  function applyStatic(codeEl, ranges, presetNames) {
-    const lines = getLineEls(codeEl);
-    const allClasses = new Set();
-    applyEntries(lines, ranges, presetNames, allClasses);
+  function applyStatic(codeEl, entries, resolve) {
+    applyEntries(getLineEls(codeEl), entries, resolve);
   }
 
-  function applyProgressive(preEl, codeEl, steps, presetNames) {
+  function applyProgressive(preEl, codeEl, steps, resolve) {
     const lines = getLineEls(codeEl);
-    const allClasses = new Set();
-    // Pre-scan to know which classes are touched, for clean clears.
+
+    // Compute total touched set across all steps (for clearing).
+    const allTouched = { classes: new Set(), props: new Set() };
     for (const step of steps) {
-      for (const e of step) {
-        const cls = resolveStyle(e.name, presetNames);
-        if (cls) allClasses.add(cls);
+      for (const { name } of step) {
+        const r = resolve(name);
+        if (!r) continue;
+        if (r.type === "class") allTouched.classes.add(r.cls);
+        else {
+          const { props, classes } = expandInlineStyle(r.def);
+          for (const c of classes) allTouched.classes.add(c);
+          for (const k of Object.keys(props)) allTouched.props.add(k);
+        }
       }
     }
-    const classList = [...allClasses];
+    const totalTouched = { classes: [...allTouched.classes], props: [...allTouched.props] };
 
     const applyStep = (idx) => {
-      clearClasses(lines, classList);
-      const ranges = steps[idx] || [];
-      const dummy = new Set();
-      applyEntries(lines, ranges, presetNames, dummy);
+      clearAll(lines, totalTouched);
+      applyEntries(lines, steps[idx] || [], resolve);
     };
 
     applyStep(0);
@@ -182,19 +282,16 @@
   // ---------------------------------------------------------------------------
   // Entry point
   // ---------------------------------------------------------------------------
-  function getSpec(preEl, codeEl) {
+  function getSpec(preEl) {
     const wrapper = preEl.closest("[data-code-style], [data-code-line-diff]") || preEl;
     let spec = wrapper.getAttribute("data-code-style");
-    if (spec) return { spec, source: "code-style" };
+    if (spec) return spec;
     spec = wrapper.getAttribute("data-code-line-diff");
     if (spec) {
-      console.warn("[code-style] data-code-line-diff is deprecated, use data-code-style");
-      // Translate old marker grammar → new name grammar.
-      const translated = spec.replace(/([+\-!#@]):/g, (_, m) => {
-        const map = { "+": "add:", "-": "rem:", "!": "chg:", "#": "note:", "@": "hi:" };
-        return map[m];
+      reportError("data-code-line-diff is deprecated, use data-code-style");
+      return spec.replace(/([+\-!#@]):/g, (_, m) => {
+        return { "+": "add:", "-": "rem:", "!": "chg:", "#": "note:", "@": "hi:" }[m];
       });
-      return { spec: translated, source: "code-line-diff" };
     }
     return null;
   }
@@ -202,7 +299,7 @@
   function getPresets(preEl) {
     const wrapper = preEl.closest("[data-code-style-preset]") || preEl;
     const raw = wrapper.getAttribute("data-code-style-preset");
-    if (!raw) return ["diff"]; // sensible default
+    if (!raw) return ["diff"];
     return raw.split(/[,\s]+/).filter(Boolean);
   }
 
@@ -210,17 +307,20 @@
     const blocks = document.querySelectorAll("pre > code, div.sourceCode pre > code");
     blocks.forEach((codeEl) => {
       const preEl = codeEl.parentElement;
-      const got = getSpec(preEl, codeEl);
-      if (!got) return;
-      const steps = parseSpec(got.spec);
-      if (steps.length === 0) return;
+      currentBlock = preEl.closest("div.sourceCode") || preEl;
+      const spec = getSpec(preEl);
+      if (!spec) { currentBlock = null; return; }
+      const { steps, inlineStyles } = parseSpec(spec);
+      if (steps.length === 0) { currentBlock = null; return; }
       const presetNames = getPresets(preEl);
+      const resolve = makeResolver(presetNames, inlineStyles);
 
       if (steps.length === 1) {
-        applyStatic(codeEl, steps[0], presetNames);
+        applyStatic(codeEl, steps[0], resolve);
       } else {
-        applyProgressive(preEl, codeEl, steps, presetNames);
+        applyProgressive(preEl, codeEl, steps, resolve);
       }
+      currentBlock = null;
     });
   }
 

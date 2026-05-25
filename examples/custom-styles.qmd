@@ -1,0 +1,58 @@
+---
+title: "custom styles"
+format:
+  code-style-revealjs:
+    width: 1280
+    height: 720
+pagetitle: code-style — custom
+echo: false
+code-line-numbers: false
+---
+
+## Inline custom styles
+
+Define styles in the cell option and apply them by name. No preset needed.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     warn:   { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
+#|     ghost:  { opacity: 0.35 }
+#|   steps:
+#|     - warn: 3
+#|     - ghost: 1-2
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
+## Composing styles
+
+A line can be targeted by multiple styles in the same step. Non-conflicting
+properties stack; conflicting properties use spec order — later wins.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     bold-line: { weight: bold }
+#|   steps:
+#|     - hi: 3
+#|       bold-line: 3
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
+## Dev-mode errors
+
+Append `?cs-debug=1` to the page URL to see inline error banners for unknown
+style names, bad ranges, or malformed specs. In production, errors only log
+to the console.
