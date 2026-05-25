@@ -1,6 +1,8 @@
 ---
 title: "HTML format"
-format: code-style-html
+format: html
+filters:
+  - code-style
 ---
 
 The same extension works on `format: html` for plain document output. Without

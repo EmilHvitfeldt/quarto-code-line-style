@@ -1,9 +1,11 @@
 ---
 title: "tokens & columns"
 format:
-  code-style-revealjs:
+  revealjs:
     width: 1280
     height: 720
+filters:
+  - code-style
 pagetitle: code-style — tokens
 echo: false
 code-line-numbers: false

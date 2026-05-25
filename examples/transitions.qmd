@@ -1,9 +1,11 @@
 ---
 title: "transitions"
 format:
-  code-style-revealjs:
+  revealjs:
     width: 1280
     height: 720
+filters:
+  - code-style
 pagetitle: code-style — transitions
 echo: false
 code-line-numbers: false

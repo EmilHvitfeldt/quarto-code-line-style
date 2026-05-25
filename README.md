@@ -15,9 +15,13 @@ quarto add EmilHvitfeldt/quarto-code-diff
 
 ```yaml
 ---
-format: code-style-revealjs
+format: revealjs
+filters:
+  - code-style
 ---
 ```
+
+Works with any HTML-family format — `revealjs`, `html`, etc.
 
 ```` markdown
 ```{.r data-code-style="add:2-3, rem:5"}

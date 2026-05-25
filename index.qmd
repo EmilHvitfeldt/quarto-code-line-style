@@ -2,23 +2,31 @@
 title: "code-style"
 subtitle: "Named visual treatments for code blocks in Quarto"
 format:
-  code-style-revealjs:
-    width: 1280
-    height: 720
-pagetitle: code-style
-echo: false
-code-line-numbers: false
+  html:
+    toc: true
+    code-overflow: wrap
+filters:
+  - code-style
 ---
-
-## What is this?
 
 A Quarto extension that decorates code blocks with **named styles** —
 diff, emphasis, custom — applied to **regions** (lines, columns, regex
 tokens) across **steps** (revealjs fragments).
 
-::: {.fragment}
 Diff is one preset. The engine doesn't know what a diff is.
-:::
+
+## Install
+
+```bash
+quarto add EmilHvitfeldt/quarto-code-diff
+```
+
+Then in your document's YAML:
+
+```yaml
+filters:
+  - code-style
+```
 
 ## Quick taste
 
@@ -30,53 +38,59 @@ df |>
   arrange(desc(m))
 ```
 
-## The gallery
+## Examples
 
-- [`diff`](examples/diff.html) — add / rem / chg / note / hi
-- [`emphasis`](examples/emphasis.html) — focus / dim / strong
-- [`custom-styles`](examples/custom-styles.html) — define your own
-- [`transitions`](examples/transitions.html) — timing, modes, presence
-- [`tokens`](examples/tokens.html) — regex + column targeting
-- [`annotations`](examples/annotations.html) — labels in the margin
-- [`html-format`](examples/html-format.html) — works outside revealjs too
+Each linked deck demonstrates one concept end-to-end.
 
-## Authoring
+| Deck | What it shows |
+|------|---------------|
+| [`diff`](examples/diff.html) | the 5 built-in styles (add / rem / chg / note / hi) |
+| [`emphasis`](examples/emphasis.html) | focus / dim / strong |
+| [`custom-styles`](examples/custom-styles.html) | define your own styles inline |
+| [`transitions`](examples/transitions.html) | timing, named modes, presence |
+| [`tokens`](examples/tokens.html) | regex and column targeting |
+| [`annotations`](examples/annotations.html) | margin labels on a leader line |
+| [`html-format`](examples/html-format.html) | works outside revealjs too |
 
-::: {.columns}
-::: {.column width="50%"}
-**Static block attribute**
+## Authoring forms
+
+### Compact attribute (any code block)
 
 ```
-{.r data-code-style="add:2-3, rem:5"}
-df |>
-  filter(cyl == 6) |>
-  group_by(gear) |>
-  summarise(m = mean(mpg)) |>
-  arrange(desc(m))
+{.r data-code-style="add:2-3, rem:5"}                # static
+{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
 ```
 
-:::
-::: {.column width="50%"}
-**YAML cell option**
-
-```{{r}}
-#| code-style:
-#|   preset: emphasis
-#|   - focus: 3
-#|   - dim: [1-2, 4-5]
-```
-
-:::
-:::
-
-## Installation
-
-```bash
-quarto add EmilHvitfeldt/quarto-code-diff
-```
-
-Then in your YAML:
+### YAML cell option (executable chunks)
 
 ```yaml
-format: code-style-revealjs
+#| code-style:
+#|   preset: emphasis
+#|   styles:
+#|     warn: { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
+#|   transition: { duration: 400, mode: slide }
+#|   steps:
+#|     - focus: 3
+#|     - warn: { line: 4, match: "bug", label: "this one" }
 ```
+
+## Concepts
+
+- **Style** — name → CSS class (preset) or inline primitives
+  (`bg`, `fg`, `gutter`, `opacity`, `weight`, `marker`, `duration`, `easing`).
+- **Region** — `at: 2-3`, `at: { line, match }`, `at: { line, cols }`,
+  or short keys: `add: 2-3`.
+- **Step** — top-level list = reveal.js fragments. Single object = static.
+
+## Accessibility
+
+- Transitions wrap `@media (prefers-reduced-motion: reduce)`.
+- Every style ships a gutter `marker` character so colorblind / monochrome
+  viewers can still read the decoration.
+- Step labels are announced via an `aria-live` region.
+
+## Debugging
+
+Append `?cs-debug=1` to any rendered URL to surface inline error banners
+above blocks with malformed specs, unknown style names, or out-of-range
+line numbers.
