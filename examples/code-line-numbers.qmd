@@ -13,17 +13,18 @@ code-line-numbers: false
 
 ## Why?
 
-Quarto's built-in `code-line-numbers` covers the common case: highlight some
-lines, optionally step through them. `code-style` is a superset — same
-behavior comes out of the `hi` style.
+Quarto's built-in `code-line-numbers` is the common-case shortcut for "fade
+in some lines as I talk." `code-style` is a superset — same look from the
+`mark` style in the `emphasis` preset.
 
-The mapping is one-for-one. Use `code-style` when you outgrow it (custom
-colors, multiple styles per step, the diff preset, labels…).
+The mapping is one-for-one. Reach for `code-style` when you outgrow it
+(custom colors, multiple styles per step, the diff preset, labels…).
 
-## Range — `code-line-numbers="3-5"`
+## The built-in for reference
 
 ````markdown
-```{.r data-code-style="hi:3-5"}
+```{{r}}
+#| code-line-numbers: "3-5"
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -32,7 +33,27 @@ df |>
 ```
 ````
 
-```{.r data-code-style="hi:3-5"}
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-numbers: "3-5"
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Range — `code-line-numbers="3-5"`
+
+````markdown
+```{.r data-code-style="mark:3-5" data-code-style-preset="emphasis"}
+df |>
+  ...
+```
+````
+
+```{.r data-code-style="mark:3-5" data-code-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -43,13 +64,13 @@ df |>
 ## Disparate lines — `code-line-numbers="2,4"`
 
 ````markdown
-```{.r data-code-style="hi:2, hi:4"}
+```{.r data-code-style="mark:2, mark:4" data-code-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-style="hi:2, hi:4"}
+```{.r data-code-style="mark:2, mark:4" data-code-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -60,7 +81,7 @@ df |>
 ## Progressive — `code-line-numbers="|3|4-5"`
 
 ````markdown
-```{.r data-code-style="|hi:3|hi:4-5"}
+```{.r data-code-style="|mark:3|mark:4-5" data-code-style-preset="emphasis"}
 df |>
   ...
 ```
@@ -68,24 +89,7 @@ df |>
 
 Press → to walk through.
 
-```{.r data-code-style="|hi:3|hi:4-5"}
-df |>
-  filter(cyl == 6) |>
-  group_by(gear) |>
-  summarise(m = mean(mpg)) |>
-  arrange(desc(m))
-```
-
-## Combined progressive — `code-line-numbers="|2,4|3-5"`
-
-````markdown
-```{.r data-code-style="|hi:2,hi:4|hi:3-5"}
-df |>
-  ...
-```
-````
-
-```{.r data-code-style="|hi:2,hi:4|hi:3-5"}
+```{.r data-code-style="|mark:3|mark:4-5" data-code-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -104,7 +108,7 @@ You can pick a different color, stack styles, or attach a label — things
 #|   styles:
 #|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }
 #|   steps:
-#|     - hi: 2
+#|     - mark: 2
 #|     - warn: { line: 4, label: "this is the bottleneck" }
 ```
 ````
@@ -113,10 +117,11 @@ You can pick a different color, stack styles, or attach a label — things
 #| echo: true
 #| eval: false
 #| code-style:
+#|   preset: emphasis
 #|   styles:
 #|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }
 #|   steps:
-#|     - hi: 2
+#|     - mark: 2
 #|     - warn: { line: 4, label: "this is the bottleneck" }
 df |>
   filter(cyl == 6) |>

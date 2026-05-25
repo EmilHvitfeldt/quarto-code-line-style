@@ -166,3 +166,8 @@ div.sourceCode pre > code > span.cs-strong {
   font-weight: bold;
   background-color: rgba(0, 0, 0, 0.04);
 }
+/* `mark` — matches reveal.js's `code-line-numbers` look: soft yellow,
+   no border-left tint, no gutter marker. */
+div.sourceCode pre > code > span.cs-mark {
+  background-color: rgba(255, 230, 100, 0.45);
+}
