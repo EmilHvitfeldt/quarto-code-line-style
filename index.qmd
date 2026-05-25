@@ -1,5 +1,6 @@
 ---
 title: "code-style"
+subtitle: "Named visual treatments for code blocks in Quarto"
 format:
   code-style-revealjs:
     width: 1280
@@ -9,11 +10,15 @@ echo: false
 code-line-numbers: false
 ---
 
-## code-style
+## What is this?
 
-A Quarto reveal.js extension for **named visual treatments** on regions of
-code blocks. The `diff` preset ships out of the box; see
-[`examples/diff.qmd`](examples/diff.html).
+A Quarto extension that decorates code blocks with **named styles** —
+diff, emphasis, custom — applied to **regions** (lines, columns, regex
+tokens) across **steps** (revealjs fragments).
+
+::: {.fragment}
+Diff is one preset. The engine doesn't know what a diff is.
+:::
 
 ## Quick taste
 
@@ -23,4 +28,55 @@ df |>
   group_by(gear) |>
   summarise(m = mean(mpg)) |>
   arrange(desc(m))
+```
+
+## The gallery
+
+- [`diff`](examples/diff.html) — add / rem / chg / note / hi
+- [`emphasis`](examples/emphasis.html) — focus / dim / strong
+- [`custom-styles`](examples/custom-styles.html) — define your own
+- [`transitions`](examples/transitions.html) — timing, modes, presence
+- [`tokens`](examples/tokens.html) — regex + column targeting
+- [`annotations`](examples/annotations.html) — labels in the margin
+- [`html-format`](examples/html-format.html) — works outside revealjs too
+
+## Authoring
+
+::: {.columns}
+::: {.column width="50%"}
+**Static block attribute**
+
+```
+{.r data-code-style="add:2-3, rem:5"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+:::
+::: {.column width="50%"}
+**YAML cell option**
+
+```{{r}}
+#| code-style:
+#|   preset: emphasis
+#|   - focus: 3
+#|   - dim: [1-2, 4-5]
+```
+
+:::
+:::
+
+## Installation
+
+```bash
+quarto add EmilHvitfeldt/quarto-code-diff
+```
+
+Then in your YAML:
+
+```yaml
+format: code-style-revealjs
 ```
