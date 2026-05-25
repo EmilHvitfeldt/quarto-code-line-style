@@ -1,0 +1,63 @@
+---
+title: "tokens & columns"
+format:
+  code-style-revealjs:
+    width: 1280
+    height: 720
+pagetitle: code-style — tokens
+echo: false
+code-line-numbers: false
+---
+
+## Highlight a token by regex
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   - hi: { line: 4, match: "summarise" }
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Highlight by column range
+
+Columns are 1-indexed and inclusive on both ends.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   - hi: { line: 4, cols: 3-12 }
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## Combine line and token
+
+Line-level emphasis plus a token call-out on top.
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     bug: { bg: "#ffd4d4", outline: "1px solid #c00" }
+#|   steps:
+#|     - dim: 1-3
+#|       focus: 4
+#|       bug: { line: 4, match: "mean\\(mpg\\)" }
+#|     - dim: [1-3, 5]
+#|       focus: 4
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```

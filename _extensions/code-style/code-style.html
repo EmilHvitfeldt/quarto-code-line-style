@@ -94,6 +94,18 @@
   }
 
   function parseRange(val) {
+    // Token or column targeting: { line, match } or { line, cols }
+    if (val && typeof val === "object" && !Array.isArray(val)) {
+      if (val.line == null) { reportError("region object missing `line`"); return null; }
+      const line = parseInt(val.line, 10);
+      if (val.match != null) return { from: line, to: line, match: String(val.match) };
+      if (val.cols != null) {
+        const m = String(val.cols).match(/^(\d+)(?:-(\d+))?$/);
+        if (!m) { reportError("cannot parse cols: " + val.cols); return null; }
+        return { from: line, to: line, cols: [parseInt(m[1], 10), m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10)] };
+      }
+      return { from: line, to: line };
+    }
     const s = String(val).trim();
     const m = s.match(/^(\d+)(?:-(\d+))?$/);
     if (!m) { reportError("cannot parse range: " + s); return null; }
@@ -215,6 +227,92 @@
     return Array.from(codeEl.querySelectorAll(":scope > span[id]"));
   }
 
+  // Walk text nodes under `lineEl` and collect them with their cumulative
+  // column ranges. Returns [{ node, start, end, text }].
+  function collectTextNodes(lineEl) {
+    const out = [];
+    let col = 0;
+    const walker = document.createTreeWalker(lineEl, NodeFilter.SHOW_TEXT);
+    let n;
+    while ((n = walker.nextNode())) {
+      const t = n.nodeValue;
+      out.push({ node: n, start: col, end: col + t.length, text: t });
+      col += t.length;
+    }
+    return out;
+  }
+
+  // Wrap a [start, end) column range within `lineEl` in a fresh <span>. May
+  // split text nodes. Returns the new wrapper span (or null if range is empty).
+  function wrapColRange(lineEl, start, end) {
+    if (end <= start) return null;
+    const nodes = collectTextNodes(lineEl);
+    // Find the first text node containing `start`.
+    let firstIdx = -1, lastIdx = -1;
+    for (let i = 0; i < nodes.length; i++) {
+      if (firstIdx < 0 && nodes[i].end > start) firstIdx = i;
+      if (nodes[i].start < end) lastIdx = i;
+    }
+    if (firstIdx < 0 || lastIdx < 0) return null;
+
+    // Split the first/last text nodes at the boundaries.
+    const first = nodes[firstIdx];
+    if (start > first.start) {
+      const offset = start - first.start;
+      first.node.splitText(offset);
+      // After splitText, the new second half is the next sibling and holds
+      // what we want; the original `first.node` keeps the prefix.
+      nodes[firstIdx] = { node: first.node.nextSibling, start, end: first.end, text: first.node.nextSibling.nodeValue };
+    }
+    const last = nodes[lastIdx];
+    if (end < last.end) {
+      const offset = end - last.start;
+      last.node.splitText(offset);
+      nodes[lastIdx] = { node: last.node, start: last.start, end, text: last.node.nodeValue };
+    }
+
+    // Build a span and move the affected nodes into it, in order.
+    const span = document.createElement("span");
+    span.className = "cs-token";
+    const range = document.createRange();
+    range.setStartBefore(nodes[firstIdx].node);
+    range.setEndAfter(nodes[lastIdx].node);
+    range.surroundContents(span);
+    return span;
+  }
+
+  function wrapTokens(lineEl, { match, cols }) {
+    const out = [];
+    if (cols) {
+      // cols are 1-indexed; we work in 0-indexed half-open intervals.
+      const start = Math.max(0, cols[0] - 1);
+      const end = cols[1];
+      const span = wrapColRange(lineEl, start, end);
+      if (span) out.push(span);
+      return out;
+    }
+    if (match != null) {
+      const text = lineEl.textContent;
+      let re;
+      try { re = new RegExp(match, "g"); }
+      catch (e) { reportError("bad regex: " + match); return out; }
+      // Collect all match ranges first; wrap from last to first so earlier
+      // offsets remain valid as we split text nodes.
+      const ranges = [];
+      let m;
+      while ((m = re.exec(text)) !== null) {
+        ranges.push([m.index, m.index + m[0].length]);
+        if (m[0].length === 0) re.lastIndex++;
+      }
+      for (let i = ranges.length - 1; i >= 0; i--) {
+        const span = wrapColRange(lineEl, ranges[i][0], ranges[i][1]);
+        if (span) out.unshift(span);
+      }
+      return out;
+    }
+    return out;
+  }
+
   // Apply an array of entries against the given line elements using resolve().
   // Returns the set of (CSS class, prop-name) records touched so we can clear
   // them later for progressive replace semantics.
@@ -224,27 +322,36 @@
     // Per-element accumulator for inline props — later entries win on conflicts.
     const elementProps = new Map();
 
-    for (const { name, from, to } of entries) {
+    for (const entry of entries) {
+      const { name, from, to, match, cols } = entry;
       const resolved = resolve(name);
       if (!resolved) { reportError("unknown style name: " + name); continue; }
 
       for (let i = from; i <= to; i++) {
-        const el = lines[i - 1];
-        if (!el) { reportError("line out of range: " + i); continue; }
+        const lineEl = lines[i - 1];
+        if (!lineEl) { reportError("line out of range: " + i); continue; }
 
-        if (resolved.type === "class") {
-          el.classList.add(resolved.cls);
-          touchedClasses.add(resolved.cls);
-        } else {
-          const { props, classes } = expandInlineStyle(resolved.def);
-          for (const c of classes) {
-            el.classList.add(c);
-            touchedClasses.add(c);
+        // For token / column targeting, wrap matched substrings in spans and
+        // treat those as the targets.
+        const targets = (match != null || cols != null)
+          ? wrapTokens(lineEl, { match, cols })
+          : [lineEl];
+
+        for (const el of targets) {
+          if (resolved.type === "class") {
+            el.classList.add(resolved.cls);
+            touchedClasses.add(resolved.cls);
+          } else {
+            const { props, classes } = expandInlineStyle(resolved.def);
+            for (const c of classes) {
+              el.classList.add(c);
+              touchedClasses.add(c);
+            }
+            const existing = elementProps.get(el) || {};
+            Object.assign(existing, props);
+            elementProps.set(el, existing);
+            for (const k of Object.keys(props)) touchedProps.add(k);
           }
-          const existing = elementProps.get(el) || {};
-          Object.assign(existing, props);
-          elementProps.set(el, existing);
-          for (const k of Object.keys(props)) touchedProps.add(k);
         }
       }
     }

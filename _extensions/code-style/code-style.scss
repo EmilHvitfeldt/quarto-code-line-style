@@ -37,6 +37,14 @@ div.sourceCode pre > code > span::before {
   }
 }
 
+/* Token / column wrappers — inline so they don't take a whole line. */
+div.sourceCode pre > code > span > span.cs-token {
+  display: inline;
+  border-radius: 2px;
+  padding: 0 0.1em;
+  transition: background-color var(--cs-duration) var(--cs-easing);
+}
+
 @import "modes/modes";
 @import "presets/diff";
 @import "presets/emphasis";
