@@ -1,0 +1,73 @@
+---
+format:
+  revealjs:
+    theme: [default, styles.scss]
+    width: 1280
+    height: 720
+    include-after-body:
+      - "all-the-js-code.html"
+pagetitle: Title of Talk
+echo: false
+code-line-numbers: false
+---
+
+## Plain code block
+
+```r
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(m = mean(mpg)) |>
+  arrange(desc(m))
+```
+
+## All 5 diff styles
+
+```{.r data-code-line-diff="+:1,-:2,!:3,#:4,@:5"}
+added line (green)
+removed line (red)
+changed line (orange)
+commented line (gray, dimmed)
+highlighted line (pink)
+```
+
+## Static diff
+
+```{.r data-code-line-diff="-:3,+:3-6"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## Progressive diff
+
+```{.r data-code-line-diff="|@:2|-:3,+:4-7|@:8"}
+df |>
+  filter(cyl == 6) |>
+  group_by(gear) |>
+  summarise(
+    m = mean(mpg),
+    .by = gear
+  ) |>
+  arrange(desc(m))
+```
+
+## Executable, YAML form
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-line-diff:
+#|   - add: 2-3
+#|   - rem: 5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
