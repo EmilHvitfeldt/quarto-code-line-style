@@ -14,7 +14,7 @@ code-line-numbers: false
 ## The 5 diff styles
 
 ````markdown
-```{.r data-code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
+```{.r code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
 added line
 removed line
 changed line
@@ -23,7 +23,7 @@ highlighted line
 ```
 ````
 
-```{.r data-code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
+```{.r code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
 added line
 removed line
 changed line
@@ -34,14 +34,14 @@ highlighted line
 ## Static diff
 
 ````markdown
-```{.r data-code-line-style="rem:3, add:3-6"}
+```{.r code-line-style="rem:3, add:3-6"}
 df |>
   filter(cyl == 6) |>
   ...
 ```
 ````
 
-```{.r data-code-line-style="rem:3, add:3-6"}
+```{.r code-line-style="rem:3, add:3-6"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -55,7 +55,7 @@ df |>
 ## Progressive diff
 
 ````markdown
-```{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
+```{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
   ...
 ```
@@ -63,7 +63,7 @@ df |>
 
 Press → to walk through.
 
-```{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
+```{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -104,9 +104,9 @@ mtcars |>
 
 :::: {.columns}
 ::: {.column width="50%"}
-**Before** — `data-code-line-style="rem:3-5"`
+**Before** — `code-line-style="rem:3-5"`
 
-```{.r data-code-line-style="rem:3-5"}
+```{.r code-line-style="rem:3-5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -116,9 +116,9 @@ df |>
 :::
 
 ::: {.column width="50%"}
-**After** — `data-code-line-style="add:3-6"`
+**After** — `code-line-style="add:3-6"`
 
-```{.r data-code-line-style="add:3-6"}
+```{.r code-line-style="add:3-6"}
 df |>
   filter(cyl == 6) |>
   summarise(

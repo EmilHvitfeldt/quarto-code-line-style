@@ -16,13 +16,13 @@ code-line-numbers: false
 Press → to step through.
 
 ````markdown
-```{.r data-code-line-style="|hi:2|hi:3|hi:4-5"}
+```{.r code-line-style="|hi:2|hi:3|hi:4-5"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-line-style="|hi:2|hi:3|hi:4-5"}
+```{.r code-line-style="|hi:2|hi:3|hi:4-5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>

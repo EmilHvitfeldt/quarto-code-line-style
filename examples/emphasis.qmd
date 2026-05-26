@@ -14,13 +14,13 @@ code-line-numbers: false
 ## Focus a single line
 
 ````markdown
-```{.r data-code-line-style="focus:3" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="focus:3" code-line-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-line-style="focus:3" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="focus:3" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -31,12 +31,12 @@ df |>
 ## Dim everything except the focus
 
 ````markdown
-```{.r data-code-line-style="dim:1-2,focus:3,dim:4-5"
-        data-code-line-style-preset="emphasis"}
+```{.r code-line-style="dim:1-2,focus:3,dim:4-5"
+        code-line-style-preset="emphasis"}
 ```
 ````
 
-```{.r data-code-line-style="dim:1-2,focus:3,dim:4-5" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="dim:1-2,focus:3,dim:4-5" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -46,7 +46,7 @@ df |>
 
 ## Strong call-out
 
-```{.r data-code-line-style="strong:3" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="strong:3" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>

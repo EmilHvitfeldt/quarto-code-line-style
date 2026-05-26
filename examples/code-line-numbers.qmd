@@ -47,13 +47,13 @@ df |>
 ## Range — `code-line-numbers="3-5"`
 
 ````markdown
-```{.r data-code-line-style="mark:3-5" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="mark:3-5" code-line-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-line-style="mark:3-5" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="mark:3-5" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -64,13 +64,13 @@ df |>
 ## Disparate lines — `code-line-numbers="2,4"`
 
 ````markdown
-```{.r data-code-line-style="mark:2, mark:4" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="mark:2, mark:4" code-line-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-line-style="mark:2, mark:4" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="mark:2, mark:4" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -81,7 +81,7 @@ df |>
 ## Progressive — `code-line-numbers="|3|4-5"`
 
 ````markdown
-```{.r data-code-line-style="|mark:3|mark:4-5" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="|mark:3|mark:4-5" code-line-style-preset="emphasis"}
 df |>
   ...
 ```
@@ -89,7 +89,7 @@ df |>
 
 Press → to walk through.
 
-```{.r data-code-line-style="|mark:3|mark:4-5" data-code-line-style-preset="emphasis"}
+```{.r code-line-style="|mark:3|mark:4-5" code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>

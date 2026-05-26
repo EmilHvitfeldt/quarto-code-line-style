@@ -24,7 +24,7 @@ filters:
 Works with any HTML-family format — `revealjs`, `html`, etc.
 
 ```` markdown
-```{.r data-code-line-style="add:2-3, rem:5"}
+```{.r code-line-style="add:2-3, rem:5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -54,8 +54,8 @@ line-oriented.
 **Compact attribute (static blocks):**
 
 ```
-{.r data-code-line-style="add:2-3, rem:5"}                # static
-{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
+{.r code-line-style="add:2-3, rem:5"}                # static
+{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
 ```
 
 **YAML cell option (executable cells):**

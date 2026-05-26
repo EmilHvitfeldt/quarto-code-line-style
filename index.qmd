@@ -30,7 +30,7 @@ filters:
 
 ## Quick taste
 
-```{.r data-code-line-style="add:2-3, rem:5"}
+```{.r code-line-style="add:2-3, rem:5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -119,8 +119,8 @@ standalone page.
 ### Compact attribute (any code block)
 
 ```
-{.r data-code-line-style="add:2-3, rem:5"}                # static
-{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
+{.r code-line-style="add:2-3, rem:5"}                # static
+{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
 ```
 
 ### YAML cell option (executable chunks)

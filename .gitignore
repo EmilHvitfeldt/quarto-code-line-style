@@ -9,3 +9,6 @@ scratch/
 .Rproj.user
 
 /.luarc.json
+
+/.quarto/
+**/*.quarto_ipynb

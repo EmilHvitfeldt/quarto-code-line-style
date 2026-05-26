@@ -457,14 +457,22 @@
   // ---------------------------------------------------------------------------
   // Entry point
   // ---------------------------------------------------------------------------
+  // Read an attribute that may appear with or without the `data-` prefix —
+  // Pandoc auto-prefixes custom code-block attributes when emitting HTML, but
+  // users may also author the prefixed form directly.
+  function readAttr(preEl, name) {
+    const wrapper =
+      preEl.closest("[" + name + "], [data-" + name + "]") || preEl;
+    return wrapper.getAttribute(name) || wrapper.getAttribute("data-" + name);
+  }
+
   function getSpec(preEl) {
-    const wrapper = preEl.closest("[data-code-line-style], [data-code-line-diff]") || preEl;
-    let spec = wrapper.getAttribute("data-code-line-style");
+    const spec = readAttr(preEl, "code-line-style");
     if (spec) return spec;
-    spec = wrapper.getAttribute("data-code-line-diff");
-    if (spec) {
-      reportError("data-code-line-diff is deprecated, use data-code-line-style");
-      return spec.replace(/([+\-!#@]):/g, (_, m) => {
+    const legacy = readAttr(preEl, "code-line-diff");
+    if (legacy) {
+      reportError("code-line-diff is deprecated, use code-line-style");
+      return legacy.replace(/([+\-!#@]):/g, (_, m) => {
         return { "+": "add:", "-": "rem:", "!": "chg:", "#": "note:", "@": "hi:" }[m];
       });
     }
@@ -472,15 +480,13 @@
   }
 
   function getPresets(preEl) {
-    const wrapper = preEl.closest("[data-code-line-style-preset]") || preEl;
-    const raw = wrapper.getAttribute("data-code-line-style-preset");
+    const raw = readAttr(preEl, "code-line-style-preset");
     if (!raw) return ["diff", "emphasis"];
     return raw.split(/[,\s]+/).filter(Boolean);
   }
 
   function getStaticMode(preEl) {
-    const wrapper = preEl.closest("[data-code-line-style-static]") || preEl;
-    const raw = wrapper.getAttribute("data-code-line-style-static");
+    const raw = readAttr(preEl, "code-line-style-static");
     return raw === "merged" ? "merged" : "last";
   }
 
