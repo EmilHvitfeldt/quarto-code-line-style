@@ -2,3 +2,7 @@
 /*.html
 /examples/*.html
 .quarto/
+.claude/
+diagnose.js
+scratch/
+.DS_Store
