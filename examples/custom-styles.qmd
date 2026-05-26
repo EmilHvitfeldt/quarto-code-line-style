@@ -78,10 +78,12 @@ mtcars |>
 
 ## Text color instead of background
 
-Use `fg` to recolor a line's text. The `!important` flag isn't needed — the
-inline style wins over Pandoc's syntax-highlight spans because it lands on the
-line wrapper, but the syntax tokens inside set their own colors. To override
-those too, also paint `class: cs-fg-strong` (defined below).
+The `fg` primitive sets `color` on the line wrapper. That only reaches text
+that doesn't have its own color — operators, punctuation, plain identifiers.
+Highlighted tokens (keywords, strings, function names) keep the colors
+Pandoc's syntax highlighter gave them, because their `color` is set on a
+nested `<span>` and wins by specificity. The next slide shows how to force
+all tokens to a color.
 
 ````markdown
 ```{{r}}
