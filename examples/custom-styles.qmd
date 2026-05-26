@@ -76,6 +76,81 @@ mtcars |>
   dplyr::arrange(dplyr::desc(m))
 ```
 
+## Text color instead of background
+
+Use `fg` to recolor a line's text. The `!important` flag isn't needed — the
+inline style wins over Pandoc's syntax-highlight spans because it lands on the
+line wrapper, but the syntax tokens inside set their own colors. To override
+those too, also paint `class: cs-fg-strong` (defined below).
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     added:   { fg: "#2ea043" }
+#|     removed: { fg: "#f85149" }
+#|   steps:
+#|     - added: 3
+#|     - removed: 5
+```
+````
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     added:   { fg: "#2ea043" }
+#|     removed: { fg: "#f85149" }
+#|   steps:
+#|     - added: 3
+#|     - removed: 5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
+## Force every token to a color
+
+Pandoc's syntax highlighter sets `color` on each token span, so the line-level
+`fg` is overridden by the token colors. Attach a class that wins via
+descendant selector:
+
+```{=html}
+<style>
+.cs-fg-mute, .cs-fg-mute * { color: #888 !important; }
+</style>
+```
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     muted: { class: cs-fg-mute }
+#|   steps:
+#|     - muted: 1-2
+#|     - muted: 4-5
+```
+````
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     muted: { class: cs-fg-mute }
+#|   steps:
+#|     - muted: 1-2
+#|     - muted: 4-5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
 ## Dev-mode errors
 
 Append `?cs-debug=1` to the page URL to see inline error banners for unknown
