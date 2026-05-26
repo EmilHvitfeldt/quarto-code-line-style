@@ -227,19 +227,6 @@
     return Array.from(codeEl.querySelectorAll(":scope > span[id]"));
   }
 
-  // Pandoc emits a `\n` text node between each line span. With our
-  // `display: block` line wrappers, those whitespace nodes render as
-  // blank rows inside the `<pre>`. Strip them once per opted-in block.
-  function stripInterSpanWhitespace(codeEl) {
-    const toRemove = [];
-    for (const n of codeEl.childNodes) {
-      if (n.nodeType === Node.TEXT_NODE && /^\s+$/.test(n.nodeValue)) {
-        toRemove.push(n);
-      }
-    }
-    toRemove.forEach((n) => n.remove());
-  }
-
   // Attach a label rendered to the right margin, anchored to `el`. The label
   // node is appended to the nearest `div.sourceCode` and positioned absolutely
   // based on `el`'s bounding box. The label is announced via the live region.
@@ -446,7 +433,6 @@
       if (!spec) { currentBlock = null; return; }
       const { steps, inlineStyles, presets, transition } = parseSpec(spec);
       if (steps.length === 0) { currentBlock = null; return; }
-      stripInterSpanWhitespace(codeEl);
       const presetNames = presets || getPresets(preEl);
       const resolve = makeResolver(presetNames, inlineStyles);
       if (transition) {

@@ -1,16 +1,20 @@
 /* code-style engine: line wrapper geometry + base transitions.
    Presets layer their own decoration on top via additional classes. */
 
-/* Only restyle blocks that opted into code-style. Other code blocks on the
-   page keep their default layout untouched. */
-div.sourceCode[data-code-style] pre > code > span {
-  display: block;
+div.sourceCode pre > code > span {
+  display: inline-block;
+  width: 100%;
   position: relative;
   border-left: 3px solid transparent;
   padding-left: 0.35em;
   margin-left: -0.35em;
   --cs-duration: 200ms;
   --cs-easing: ease;
+  /* Inline-blocks shrink to content height by default, which leaves vertical
+     gaps between consecutive highlighted lines. Force each wrapper to fill
+     its parent's line-box. */
+  min-height: 1lh;
+  vertical-align: top;
   transition:
     background-color var(--cs-duration) var(--cs-easing),
     border-color var(--cs-duration) var(--cs-easing),
@@ -19,7 +23,7 @@ div.sourceCode[data-code-style] pre > code > span {
   overflow: hidden;
 }
 
-div.sourceCode[data-code-style] pre > code > span::before {
+div.sourceCode pre > code > span::before {
   content: var(--cs-marker, "");
   position: absolute;
   left: -0.9em;
@@ -30,7 +34,7 @@ div.sourceCode[data-code-style] pre > code > span::before {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  div.sourceCode[data-code-style] pre > code > span {
+  div.sourceCode pre > code > span {
     transition: none;
   }
 }
