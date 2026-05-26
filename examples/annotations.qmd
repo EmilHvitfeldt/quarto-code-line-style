@@ -5,8 +5,8 @@ format:
     width: 1280
     height: 720
 filters:
-  - code-style
-pagetitle: code-style — annotations
+  - code-line-style
+pagetitle: code-line-style — annotations
 echo: false
 code-line-numbers: false
 ---
@@ -15,7 +15,7 @@ code-line-numbers: false
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   - hi: { line: 4, label: "this is the bottleneck" }
 ```
 ````
@@ -23,7 +23,7 @@ code-line-numbers: false
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   - hi: { line: 4, label: "this is the bottleneck" }
 df |>
   filter(cyl == 6) |>
@@ -38,7 +38,7 @@ Each step swaps the label.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   preset: emphasis
 #|   steps:
 #|     - focus: { line: 2, label: "1. filter the data" }
@@ -51,7 +51,7 @@ Each step swaps the label.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   preset: emphasis
 #|   steps:
 #|     - focus: { line: 2, label: "1. filter the data" }

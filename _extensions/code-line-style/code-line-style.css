@@ -1,4 +1,4 @@
-/* code-style engine: line wrapper geometry + base transitions.
+/* code-line-style engine: line wrapper geometry + base transitions.
    Presets layer their own decoration on top via additional classes. */
 
 div.sourceCode pre > code > span {

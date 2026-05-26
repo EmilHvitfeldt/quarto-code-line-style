@@ -5,8 +5,8 @@ format:
     width: 1280
     height: 720
 filters:
-  - code-style
-pagetitle: code-style — emulating code-line-numbers
+  - code-line-style
+pagetitle: code-line-style — emulating code-line-numbers
 echo: false
 code-line-numbers: false
 ---
@@ -14,10 +14,10 @@ code-line-numbers: false
 ## Why?
 
 Quarto's built-in `code-line-numbers` is the common-case shortcut for "fade
-in some lines as I talk." `code-style` is a superset — same look from the
+in some lines as I talk." `code-line-style` is a superset — same look from the
 `mark` style in the `emphasis` preset.
 
-The mapping is one-for-one. Reach for `code-style` when you outgrow it
+The mapping is one-for-one. Reach for `code-line-style` when you outgrow it
 (custom colors, multiple styles per step, the diff preset, labels…).
 
 ## The built-in for reference
@@ -47,13 +47,13 @@ df |>
 ## Range — `code-line-numbers="3-5"`
 
 ````markdown
-```{.r data-code-style="mark:3-5" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="mark:3-5" data-code-line-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-style="mark:3-5" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="mark:3-5" data-code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -64,13 +64,13 @@ df |>
 ## Disparate lines — `code-line-numbers="2,4"`
 
 ````markdown
-```{.r data-code-style="mark:2, mark:4" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="mark:2, mark:4" data-code-line-style-preset="emphasis"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-style="mark:2, mark:4" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="mark:2, mark:4" data-code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -81,7 +81,7 @@ df |>
 ## Progressive — `code-line-numbers="|3|4-5"`
 
 ````markdown
-```{.r data-code-style="|mark:3|mark:4-5" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="|mark:3|mark:4-5" data-code-line-style-preset="emphasis"}
 df |>
   ...
 ```
@@ -89,7 +89,7 @@ df |>
 
 Press → to walk through.
 
-```{.r data-code-style="|mark:3|mark:4-5" data-code-style-preset="emphasis"}
+```{.r data-code-line-style="|mark:3|mark:4-5" data-code-line-style-preset="emphasis"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -97,14 +97,14 @@ df |>
   arrange(desc(m))
 ```
 
-## Where `code-style` goes further
+## Where `code-line-style` goes further
 
 You can pick a different color, stack styles, or attach a label — things
 `code-line-numbers` can't do:
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }
 #|   steps:
@@ -116,7 +116,7 @@ You can pick a different color, stack styles, or attach a label — things
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   preset: emphasis
 #|   styles:
 #|     warn: { bg: "#ffd4d4", gutter: "#c00", marker: "!" }

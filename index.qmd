@@ -1,12 +1,12 @@
 ---
-title: "code-style"
+title: "code-line-style"
 subtitle: "Named visual treatments for code blocks in Quarto"
 format:
   html:
     toc: true
     code-overflow: wrap
 filters:
-  - code-style
+  - code-line-style
 ---
 
 A Quarto extension that decorates code blocks with **named styles** —
@@ -18,19 +18,19 @@ Diff is one preset. The engine doesn't know what a diff is.
 ## Install
 
 ```bash
-quarto add EmilHvitfeldt/quarto-code-diff
+quarto add EmilHvitfeldt/quarto-code-line-style
 ```
 
 Then in your document's YAML:
 
 ```yaml
 filters:
-  - code-style
+  - code-line-style
 ```
 
 ## Quick taste
 
-```{.r data-code-style="add:2-3, rem:5"}
+```{.r data-code-line-style="add:2-3, rem:5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -119,14 +119,14 @@ standalone page.
 ### Compact attribute (any code block)
 
 ```
-{.r data-code-style="add:2-3, rem:5"}                # static
-{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
+{.r data-code-line-style="add:2-3, rem:5"}                # static
+{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
 ```
 
 ### YAML cell option (executable chunks)
 
 ```yaml
-#| code-style:
+#| code-line-style:
 #|   preset: emphasis
 #|   styles:
 #|     warn: { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
@@ -152,6 +152,6 @@ standalone page.
 
 ## Debugging
 
-Append `?cs-debug=1` to any rendered URL to surface inline error banners
+Append `?cls-debug=1` to any rendered URL to surface inline error banners
 above blocks with malformed specs, unknown style names, or out-of-range
 line numbers.

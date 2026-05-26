@@ -5,8 +5,8 @@ format:
     width: 1280
     height: 720
 filters:
-  - code-style
-pagetitle: code-style — transitions
+  - code-line-style
+pagetitle: code-line-style — transitions
 echo: false
 code-line-numbers: false
 ---
@@ -16,13 +16,13 @@ code-line-numbers: false
 Press → to step through.
 
 ````markdown
-```{.r data-code-style="|hi:2|hi:3|hi:4-5"}
+```{.r data-code-line-style="|hi:2|hi:3|hi:4-5"}
 df |>
   ...
 ```
 ````
 
-```{.r data-code-style="|hi:2|hi:3|hi:4-5"}
+```{.r data-code-line-style="|hi:2|hi:3|hi:4-5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -34,7 +34,7 @@ df |>
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   transition: { duration: 800, easing: ease-out }
 #|   steps:
 #|     - hi: 2
@@ -46,7 +46,7 @@ df |>
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   transition: { duration: 800, easing: ease-out }
 #|   steps:
 #|     - hi: 2
@@ -63,7 +63,7 @@ df |>
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   steps:
 #|     - hi: 2
 #|       transition: { duration: 200 }
@@ -77,7 +77,7 @@ df |>
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   steps:
 #|     - hi: 2
 #|       transition: { duration: 200 }
@@ -98,7 +98,7 @@ A custom style can carry its own timing.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     slow-focus: { bg: "#fff3bf", duration: 1200, easing: ease-out }
 #|   steps:
@@ -109,7 +109,7 @@ A custom style can carry its own timing.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     slow-focus: { bg: "#fff3bf", duration: 1200, easing: ease-out }
 #|   steps:
@@ -128,7 +128,7 @@ slide in from height 0; `rem` lines collapse out.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   transition: { duration: 600 }
 #|   steps:
 #|     - rem: 3-5
@@ -139,7 +139,7 @@ slide in from height 0; `rem` lines collapse out.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   transition: { duration: 600 }
 #|   steps:
 #|     - rem: 3-5
@@ -160,7 +160,7 @@ df |>
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   transition: { mode: slide, duration: 500 }
 #|   steps:
 #|     - hi: 2
@@ -172,7 +172,7 @@ df |>
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   transition: { mode: slide, duration: 500 }
 #|   steps:
 #|     - hi: 2
@@ -189,7 +189,7 @@ df |>
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   steps:
 #|     - hi: 2
 #|       transition: { mode: fade }
@@ -203,7 +203,7 @@ df |>
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   steps:
 #|     - hi: 2
 #|       transition: { mode: fade }

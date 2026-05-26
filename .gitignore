@@ -6,3 +6,6 @@
 diagnose.js
 scratch/
 .DS_Store
+.Rproj.user
+
+/.luarc.json

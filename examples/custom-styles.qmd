@@ -5,8 +5,8 @@ format:
     width: 1280
     height: 720
 filters:
-  - code-style
-pagetitle: code-style — custom
+  - code-line-style
+pagetitle: code-line-style — custom
 echo: false
 code-line-numbers: false
 ---
@@ -17,7 +17,7 @@ Define styles in the cell option and apply them by name. No preset needed.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     warn:  { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
 #|     ghost: { opacity: 0.35 }
@@ -30,7 +30,7 @@ Define styles in the cell option and apply them by name. No preset needed.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     warn:   { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
 #|     ghost:  { opacity: 0.35 }
@@ -51,7 +51,7 @@ properties stack; conflicting properties use spec order — later wins.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     bold-line: { weight: bold }
 #|   steps:
@@ -63,7 +63,7 @@ properties stack; conflicting properties use spec order — later wins.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     bold-line: { weight: bold }
 #|   steps:
@@ -83,7 +83,7 @@ are otherwise immune to a line-level `color` setting.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
@@ -99,7 +99,7 @@ are otherwise immune to a line-level `color` setting.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
@@ -123,7 +123,7 @@ stay at the editor's default colors.
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
@@ -136,7 +136,7 @@ stay at the editor's default colors.
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
@@ -152,6 +152,6 @@ mtcars |>
 
 ## Dev-mode errors
 
-Append `?cs-debug=1` to the page URL to see inline error banners for unknown
+Append `?cls-debug=1` to the page URL to see inline error banners for unknown
 style names, bad ranges, or malformed specs. In production, errors only log
 to the console.

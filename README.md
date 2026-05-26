@@ -1,4 +1,4 @@
-# code-style
+# code-line-style
 
 A Quarto extension that applies **named visual treatments** to regions of
 code blocks — lines, columns, or regex tokens — optionally stepped through
@@ -8,7 +8,7 @@ cell-option away.
 ## Install
 
 ```bash
-quarto add EmilHvitfeldt/quarto-code-diff
+quarto add EmilHvitfeldt/quarto-code-line-style
 ```
 
 ## Use
@@ -17,14 +17,14 @@ quarto add EmilHvitfeldt/quarto-code-diff
 ---
 format: revealjs
 filters:
-  - code-style
+  - code-line-style
 ---
 ```
 
 Works with any HTML-family format — `revealjs`, `html`, etc.
 
 ```` markdown
-```{.r data-code-style="add:2-3, rem:5"}
+```{.r data-code-line-style="add:2-3, rem:5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -46,7 +46,7 @@ The [overview deck](index.html) links into focused example decks under
 - **html-format** — non-revealjs output
 
 For token / regex highlighting inside a line, use
-[flourish](https://github.com/kbodwin/flourish) — code-style stays
+[flourish](https://github.com/kbodwin/flourish) — code-line-style stays
 line-oriented.
 
 ## Spec cheatsheet
@@ -54,14 +54,14 @@ line-oriented.
 **Compact attribute (static blocks):**
 
 ```
-{.r data-code-style="add:2-3, rem:5"}                # static
-{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
+{.r data-code-line-style="add:2-3, rem:5"}                # static
+{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}      # progressive
 ```
 
 **YAML cell option (executable cells):**
 
 ```yaml
-#| code-style:
+#| code-line-style:
 #|   preset: emphasis
 #|   styles:
 #|     warn: { bg: "#fff3bf", gutter: "#f08c00", marker: "!" }
@@ -88,6 +88,6 @@ line-oriented.
 
 ## Debugging
 
-Append `?cs-debug=1` to any rendered URL to surface inline error banners
+Append `?cls-debug=1` to any rendered URL to surface inline error banners
 above blocks with malformed specs, unknown style names, or out-of-range
 line numbers.

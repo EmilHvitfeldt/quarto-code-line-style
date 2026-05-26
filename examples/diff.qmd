@@ -5,8 +5,8 @@ format:
     width: 1280
     height: 720
 filters:
-  - code-style
-pagetitle: code-style — diff
+  - code-line-style
+pagetitle: code-line-style — diff
 echo: false
 code-line-numbers: false
 ---
@@ -14,7 +14,7 @@ code-line-numbers: false
 ## The 5 diff styles
 
 ````markdown
-```{.r data-code-style="add:1, rem:2, chg:3, note:4, hi:5"}
+```{.r data-code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
 added line
 removed line
 changed line
@@ -23,7 +23,7 @@ highlighted line
 ```
 ````
 
-```{.r data-code-style="add:1, rem:2, chg:3, note:4, hi:5"}
+```{.r data-code-line-style="add:1, rem:2, chg:3, note:4, hi:5"}
 added line
 removed line
 changed line
@@ -34,14 +34,14 @@ highlighted line
 ## Static diff
 
 ````markdown
-```{.r data-code-style="rem:3, add:3-6"}
+```{.r data-code-line-style="rem:3, add:3-6"}
 df |>
   filter(cyl == 6) |>
   ...
 ```
 ````
 
-```{.r data-code-style="rem:3, add:3-6"}
+```{.r data-code-line-style="rem:3, add:3-6"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -55,7 +55,7 @@ df |>
 ## Progressive diff
 
 ````markdown
-```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+```{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
   ...
 ```
@@ -63,7 +63,7 @@ df |>
 
 Press → to walk through.
 
-```{.r data-code-style="|hi:2|rem:3,add:4-7|hi:8"}
+```{.r data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -78,7 +78,7 @@ df |>
 
 ````markdown
 ```{{r}}
-#| code-style:
+#| code-line-style:
 #|   - add: 2-3
 #|   - rem: 5
 mtcars |>
@@ -90,7 +90,7 @@ mtcars |>
 ```{r}
 #| echo: true
 #| eval: false
-#| code-style:
+#| code-line-style:
 #|   - add: 2-3
 #|   - rem: 5
 mtcars |>
@@ -104,9 +104,9 @@ mtcars |>
 
 :::: {.columns}
 ::: {.column width="50%"}
-**Before** — `data-code-style="rem:3-5"`
+**Before** — `data-code-line-style="rem:3-5"`
 
-```{.r data-code-style="rem:3-5"}
+```{.r data-code-line-style="rem:3-5"}
 df |>
   filter(cyl == 6) |>
   group_by(gear) |>
@@ -116,9 +116,9 @@ df |>
 :::
 
 ::: {.column width="50%"}
-**After** — `data-code-style="add:3-6"`
+**After** — `data-code-line-style="add:3-6"`
 
-```{.r data-code-style="add:3-6"}
+```{.r data-code-line-style="add:3-6"}
 df |>
   filter(cyl == 6) |>
   summarise(
