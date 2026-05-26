@@ -357,6 +357,13 @@
           for (const c of classes) allTouched.classes.add(c);
           for (const k of Object.keys(props)) allTouched.props.add(k);
         }
+        // Side-effect classes added by presence transitions.
+        if (r.presence === "exit") {
+          allTouched.classes.add("cs-presence-exit");
+        } else if (r.presence === "enter") {
+          allTouched.classes.add("cs-presence-enter");
+          allTouched.classes.add("cs-presence-hidden");
+        }
       }
     }
     const totalTouched = { classes: [...allTouched.classes], props: [...allTouched.props] };
