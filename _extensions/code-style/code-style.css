@@ -76,6 +76,14 @@ div.sourceCode pre > code > span.cs-presence-enter.cs-presence-hidden {
   padding-bottom: 0;
 }
 
+/* Force nested syntax-highlight token spans to inherit the line's `fg` color.
+   Without this, token spans (which set their own `color`) would win against
+   the line wrapper's color and `fg` would only paint operators/whitespace. */
+div.sourceCode pre > code > span.cs-fg,
+div.sourceCode pre > code > span.cs-fg * {
+  color: inherit;
+}
+
 /* Labels */
 div.sourceCode {
   position: relative;

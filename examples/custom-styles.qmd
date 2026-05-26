@@ -78,12 +78,8 @@ mtcars |>
 
 ## Text color instead of background
 
-The `fg` primitive sets `color` on the line wrapper. That only reaches text
-that doesn't have its own color — operators, punctuation, plain identifiers.
-Highlighted tokens (keywords, strings, function names) keep the colors
-Pandoc's syntax highlighter gave them, because their `color` is set on a
-nested `<span>` and wins by specificity. The next slide shows how to force
-all tokens to a color.
+`fg` recolors the whole line — including syntax-highlighted tokens, which
+are otherwise immune to a line-level `color` setting.
 
 ````markdown
 ```{{r}}
@@ -91,9 +87,12 @@ all tokens to a color.
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
+#|     muted:   { fg: "#888" }
 #|   steps:
 #|     - added: 3
+#|       muted: [1-2, 4-5]
 #|     - removed: 5
+#|       muted: [1-4]
 ```
 ````
 
@@ -104,48 +103,12 @@ all tokens to a color.
 #|   styles:
 #|     added:   { fg: "#2ea043" }
 #|     removed: { fg: "#f85149" }
+#|     muted:   { fg: "#888" }
 #|   steps:
 #|     - added: 3
+#|       muted: [1-2, 4-5]
 #|     - removed: 5
-mtcars |>
-  dplyr::filter(cyl == 6) |>
-  dplyr::group_by(gear) |>
-  dplyr::summarise(m = mean(mpg)) |>
-  dplyr::arrange(dplyr::desc(m))
-```
-
-## Force every token to a color
-
-Pandoc's syntax highlighter sets `color` on each token span, so the line-level
-`fg` is overridden by the token colors. Attach a class that wins via
-descendant selector:
-
-```{=html}
-<style>
-.cs-fg-mute, .cs-fg-mute * { color: #888 !important; }
-</style>
-```
-
-````markdown
-```{{r}}
-#| code-style:
-#|   styles:
-#|     muted: { class: cs-fg-mute }
-#|   steps:
-#|     - muted: 1-2
-#|     - muted: 4-5
-```
-````
-
-```{r}
-#| echo: true
-#| eval: false
-#| code-style:
-#|   styles:
-#|     muted: { class: cs-fg-mute }
-#|   steps:
-#|     - muted: 1-2
-#|     - muted: 4-5
+#|       muted: [1-4]
 mtcars |>
   dplyr::filter(cyl == 6) |>
   dplyr::group_by(gear) |>

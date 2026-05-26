@@ -47,6 +47,14 @@
         else classes.push(String(val));
         continue;
       }
+      // `fg` needs help reaching nested syntax-token spans, which set their
+      // own `color`. Tag the line with `cs-fg` so a descendant rule can force
+      // them to inherit the wrapper's color (see code-style.css).
+      if (key === "fg") {
+        props["color"] = String(val);
+        classes.push("cs-fg");
+        continue;
+      }
       const handler = PRIMITIVES[key];
       if (handler == null) {
         console.warn("[code-style] unknown primitive:", key);
