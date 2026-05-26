@@ -10,6 +10,11 @@ div.sourceCode pre > code > span {
   margin-left: -0.35em;
   --cs-duration: 200ms;
   --cs-easing: ease;
+  /* Inline-blocks shrink to content height by default, which leaves vertical
+     gaps between consecutive highlighted lines. Force each wrapper to fill
+     its parent's line-box. */
+  min-height: 1lh;
+  vertical-align: top;
   transition:
     background-color var(--cs-duration) var(--cs-easing),
     border-color var(--cs-duration) var(--cs-easing),
