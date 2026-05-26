@@ -116,6 +116,40 @@ mtcars |>
   dplyr::arrange(dplyr::desc(m))
 ```
 
+## Text color, without muting
+
+Same idea, but only the `added` / `removed` lines are touched — the rest
+stay at the editor's default colors.
+
+````markdown
+```{{r}}
+#| code-style:
+#|   styles:
+#|     added:   { fg: "#2ea043" }
+#|     removed: { fg: "#f85149" }
+#|   steps:
+#|     - added: 3
+#|     - removed: 5
+```
+````
+
+```{r}
+#| echo: true
+#| eval: false
+#| code-style:
+#|   styles:
+#|     added:   { fg: "#2ea043" }
+#|     removed: { fg: "#f85149" }
+#|   steps:
+#|     - added: 3
+#|     - removed: 5
+mtcars |>
+  dplyr::filter(cyl == 6) |>
+  dplyr::group_by(gear) |>
+  dplyr::summarise(m = mean(mpg)) |>
+  dplyr::arrange(dplyr::desc(m))
+```
+
 ## Dev-mode errors
 
 Append `?cs-debug=1` to the page URL to see inline error banners for unknown
