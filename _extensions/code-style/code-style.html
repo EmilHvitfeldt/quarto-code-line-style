@@ -230,25 +230,55 @@
   // Attach a label rendered to the right margin, anchored to `el`. The label
   // node is appended to the nearest `div.sourceCode` and positioned absolutely
   // based on `el`'s bounding box. The label is announced via the live region.
+  function positionLabel(label, anchor, container) {
+    const cRect = container.getBoundingClientRect();
+    const eRect = anchor.getBoundingClientRect();
+    // Use offsets relative to the container's own coordinate system so reveal's
+    // CSS transform (slide scaling) doesn't distort the math.
+    const scaleY = cRect.height && container.offsetHeight ? container.offsetHeight / cRect.height : 1;
+    const scaleX = cRect.width && container.offsetWidth ? container.offsetWidth / cRect.width : 1;
+    const top = (eRect.top - cRect.top) * scaleY + (eRect.height * scaleY) / 2 - label.offsetHeight / 2;
+    const left = container.offsetWidth + 24;
+    label.style.top = top + "px";
+    label.style.left = left + "px";
+  }
+
+  const positionedLabels = new Set();
+
   function attachLabel(el, text) {
     const container = el.closest("div.sourceCode");
     if (!container) return;
     const label = document.createElement("span");
     label.className = "cs-label";
     label.textContent = text;
+    label._csAnchor = el;
+    label._csContainer = container;
     container.appendChild(label);
-    // Position once the browser has laid out the containing block.
-    requestAnimationFrame(() => {
-      const cRect = container.getBoundingClientRect();
-      const eRect = el.getBoundingClientRect();
-      label.style.top = (eRect.top - cRect.top + eRect.height / 2 - label.offsetHeight / 2) + "px";
-      label.style.left = (cRect.width + 24) + "px";
-    });
+    positionedLabels.add(label);
+    requestAnimationFrame(() => positionLabel(label, el, container));
     announce(text);
   }
 
+  function repositionAllLabels() {
+    for (const label of positionedLabels) {
+      if (!label.isConnected) { positionedLabels.delete(label); continue; }
+      positionLabel(label, label._csAnchor, label._csContainer);
+    }
+  }
+
+  window.addEventListener("resize", repositionAllLabels);
+  if (window.Reveal) {
+    const rl = () => requestAnimationFrame(repositionAllLabels);
+    window.Reveal.on("slidechanged", rl);
+    window.Reveal.on("resize", rl);
+    window.Reveal.on("ready", rl);
+  }
+
   function clearLabels(container) {
-    container.querySelectorAll(":scope > .cs-label").forEach((n) => n.remove());
+    container.querySelectorAll(":scope > .cs-label").forEach((n) => {
+      positionedLabels.delete(n);
+      n.remove();
+    });
   }
 
   let liveRegion = null;
