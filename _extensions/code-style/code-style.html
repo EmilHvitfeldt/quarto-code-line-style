@@ -10,14 +10,14 @@
       add:  { cls: "cs-add",  presence: "enter" },
       rem:  { cls: "cs-rem",  presence: "exit"  },
       chg:  "cs-chg",
-      note: "cs-note",
-      hi:   "cs-hi"
+      note: "cs-note"
     },
     emphasis: {
       focus:  "cs-focus",
       dim:    "cs-dim",
       strong: "cs-strong",
-      mark:   "cs-mark"
+      mark:   "cs-mark",
+      hi:     "cs-hi"
     }
   };
 
@@ -299,14 +299,18 @@
             elementProps.set(el, existing);
             for (const k of Object.keys(props)) touchedProps.add(k);
           }
+          if (resolved.presence === "exit" || resolved.presence === "enter") {
+            // `cs-presence-enter` is the steady "open" state and provides the
+            // target value for transitions in both directions. It stays on the
+            // element across step transitions (see clearAll).
+            el.classList.add("cs-presence-enter");
+          }
           if (resolved.presence === "exit") {
             el.classList.add("cs-presence-exit");
             touchedClasses.add("cs-presence-exit");
           } else if (resolved.presence === "enter") {
-            el.classList.add("cs-presence-enter", "cs-presence-hidden");
-            touchedClasses.add("cs-presence-enter");
+            el.classList.add("cs-presence-hidden");
             touchedClasses.add("cs-presence-hidden");
-            // Trigger the transition after the browser registers the hidden state.
             requestAnimationFrame(() => {
               requestAnimationFrame(() => el.classList.remove("cs-presence-hidden"));
             });
@@ -347,8 +351,13 @@
     const lines = getLineEls(codeEl);
 
     const allTouched = { classes: new Set(), props: new Set() };
+    // Lines touched by any presence style. They get a permanent
+    // `cs-presence-enter` so the transition rule stays active in both
+    // directions; `cs-presence-exit` / `cs-presence-hidden` toggle on top.
+    const presenceLines = new Set();
+
     for (const step of steps) {
-      for (const { name } of step.entries) {
+      for (const { name, from, to } of step.entries) {
         const r = resolve(name);
         if (!r) continue;
         if (r.type === "class") allTouched.classes.add(r.cls);
@@ -357,14 +366,20 @@
           for (const c of classes) allTouched.classes.add(c);
           for (const k of Object.keys(props)) allTouched.props.add(k);
         }
-        // Side-effect classes added by presence transitions.
         if (r.presence === "exit") {
           allTouched.classes.add("cs-presence-exit");
+          for (let i = from; i <= to; i++) presenceLines.add(i - 1);
         } else if (r.presence === "enter") {
-          allTouched.classes.add("cs-presence-enter");
           allTouched.classes.add("cs-presence-hidden");
+          for (let i = from; i <= to; i++) presenceLines.add(i - 1);
         }
       }
+    }
+
+    // Seed `cs-presence-enter` once on every presence-affected line; do NOT
+    // clear it between steps — it's the steady-state open marker.
+    for (const idx of presenceLines) {
+      if (lines[idx]) lines[idx].classList.add("cs-presence-enter");
     }
     const totalTouched = { classes: [...allTouched.classes], props: [...allTouched.props] };
 
@@ -421,7 +436,7 @@
   function getPresets(preEl) {
     const wrapper = preEl.closest("[data-code-style-preset]") || preEl;
     const raw = wrapper.getAttribute("data-code-style-preset");
-    if (!raw) return ["diff"];
+    if (!raw) return ["diff", "emphasis"];
     return raw.split(/[,\s]+/).filter(Boolean);
   }
 

@@ -10,15 +10,24 @@ div.sourceCode pre > code > span {
   margin-left: -0.35em;
   --cs-duration: 200ms;
   --cs-easing: ease;
-  /* Inline-blocks shrink to content height by default, which leaves vertical
-     gaps between consecutive highlighted lines. Force each wrapper to fill
-     its parent's line-box. */
+  /* Inline-blocks shrink to content height, leaving vertical gaps between
+     consecutive highlighted lines. Force each wrapper to fill the parent's
+     line-box; `1.3em` is the fallback for browsers without `lh` unit. */
+  min-height: 1.3em;
   min-height: 1lh;
   vertical-align: top;
   transition:
     background-color var(--cs-duration) var(--cs-easing),
     border-color var(--cs-duration) var(--cs-easing),
     opacity var(--cs-duration) var(--cs-easing);
+}
+
+/* Only constrain height when presence animations are active, so wrapped
+   long lines aren't clipped by default. `cs-presence-enter` is the steady
+   "open" state and provides the target value for transitions in both
+   directions; `cs-presence-exit` and `cs-presence-hidden` override it to 0. */
+div.sourceCode pre > code > span.cs-presence-enter,
+div.sourceCode pre > code > span.cs-presence-exit {
   max-height: 3em;
   overflow: hidden;
 }
