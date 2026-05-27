@@ -1,5 +1,3 @@
-/*.html
-/examples/*.html
 .quarto/
 .claude/
 diagnose.js

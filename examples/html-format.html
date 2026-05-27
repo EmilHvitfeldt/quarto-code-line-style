@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.35">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>HTML format</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="html-format_files/libs/clipboard/clipboard.min.js"></script>
+<script src="html-format_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="html-format_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="html-format_files/libs/quarto-html/popper.min.js"></script>
+<script src="html-format_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="html-format_files/libs/quarto-html/anchor.min.js"></script>
+<link href="html-format_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="html-format_files/libs/quarto-html/quarto-syntax-highlighting-46f66b053e56abd73bb6e954d61a315b.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="html-format_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="html-format_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="html-format_files/libs/bootstrap/bootstrap-138a6193a3bd40baf1e627da441a4734.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="html-format_files/libs/quarto-contrib/code-line-style-0.1.0/code-line-style.css" rel="stylesheet">
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">HTML format</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>The same extension works on <code>format: html</code> for plain document output. Without reveal.js fragments, progressive specs collapse to either the <strong>last</strong> step (default) or all steps <strong>merged</strong>.</p>
+<section id="last-step-default" class="level2">
+<h2 class="anchored" data-anchor-id="last-step-default">Last step (default)</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-code-line-style="|hi:2|rem:3,add:4-7|hi:8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cyl <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gear) <span class="sc">|&gt;</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">m =</span> <span class="fu">mean</span>(mpg),</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> gear</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(m))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="merged" class="level2">
+<h2 class="anchored" data-anchor-id="merged">Merged</h2>
+<p>Set <code>code-line-style-static="merged"</code> to overlay every step’s marks at once.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r code-line-style="|hi:2|rem:3,add:4-7|hi:8"</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        code<span class="sc">-</span>line<span class="sc">-</span>style<span class="sc">-</span>static<span class="ot">=</span><span class="st">"merged"</span><span class="er">}</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-code-line-style="|hi:2|rem:3,add:4-7|hi:8" data-code-line-style-static="merged"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cyl <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gear) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">m =</span> <span class="fu">mean</span>(mpg),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> gear</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(m))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="static-still-works" class="level2">
+<h2 class="anchored" data-anchor-id="static-still-works">Static still works</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="in">```{.r code-line-style="add:2-3, rem:5"}</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  ...</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-code-line-style="add:2-3, rem:5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="sc">|&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(cyl <span class="sc">==</span> <span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(gear) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">m =</span> <span class="fu">mean</span>(mpg)) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(m))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<script type="text/javascript">
+(function () {
+  // ---------------------------------------------------------------------------
+  // Preset registry. name -> CSS class.
+  // ---------------------------------------------------------------------------
+  // Preset entries can be either a string (CSS class) or
+  // { cls, presence } when the style implies a presence animation.
+  const PRESETS = {
+    diff: {
+      add:  { cls: "cs-add",  presence: "enter" },
+      rem:  { cls: "cs-rem",  presence: "exit"  },
+      chg:  "cs-chg",
+      note: "cs-note"
+    },
+    emphasis: {
+      focus:  "cs-focus",
+      dim:    "cs-dim",
+      strong: "cs-strong",
+      mark:   "cs-mark",
+      hi:     "cs-hi"
+    }
+  };
+
+  // Inline style primitives. name -> CSS property name (or special handler).
+  const PRIMITIVES = {
+    bg:       "background-color",
+    fg:       "color",
+    gutter:   "border-left-color",
+    opacity:  "opacity",
+    weight:   "font-weight",
+    italic:   (v) => v ? { "font-style": "italic" } : {},
+    outline:  "outline",
+    marker:   (v) => ({ "--cs-marker": '"' + String(v).replace(/"/g, '\\"') + '"' }),
+    duration: (v) => ({ "--cs-duration": (typeof v === "number" ? v + "ms" : String(v)) }),
+    easing:   (v) => ({ "--cs-easing": String(v) }),
+    class:    null
+  };
+
+  function expandInlineStyle(def) {
+    // def is e.g. { bg: "#fff", gutter: "#c00", weight: "bold" }
+    // Returns { props: {cssProp -> value}, classes: [extra class names] }
+    const props = {};
+    const classes = [];
+    for (const [key, val] of Object.entries(def || {})) {
+      if (key === "class") {
+        if (Array.isArray(val)) classes.push(...val);
+        else classes.push(String(val));
+        continue;
+      }
+      // `fg` needs help reaching nested syntax-token spans, which set their
+      // own `color`. Tag the line with `cs-fg` so a descendant rule can force
+      // them to inherit the wrapper's color (see code-line-style.css).
+      if (key === "fg") {
+        props["color"] = String(val);
+        classes.push("cs-fg");
+        continue;
+      }
+      const handler = PRIMITIVES[key];
+      if (handler == null) {
+        console.warn("[code-line-style] unknown primitive:", key);
+        continue;
+      }
+      if (typeof handler === "function") {
+        Object.assign(props, handler(val));
+      } else {
+        props[handler] = String(val);
+      }
+    }
+    return { props, classes };
+  }
+
+  // Build a resolver bound to (preset list, inline styles map).
+  function makeResolver(presetNames, inlineStyles) {
+    return function resolve(name) {
+      if (inlineStyles && inlineStyles[name]) {
+        const def = inlineStyles[name];
+        return { type: "inline", def, presence: def.presence || null };
+      }
+      for (const p of presetNames) {
+        const preset = PRESETS[p];
+        if (!preset || !preset[name]) continue;
+        const v = preset[name];
+        if (typeof v === "string") return { type: "class", cls: v, presence: null };
+        return { type: "class", cls: v.cls, presence: v.presence || null };
+      }
+      return null;
+    };
+  }
+
+  // ---------------------------------------------------------------------------
+  // Parsing
+  // ---------------------------------------------------------------------------
+  function parseStep(payload) {
+    const out = [];
+    if (!payload) return out;
+    for (const seg of payload.split(",")) {
+      const s = seg.trim();
+      if (!s) continue;
+      const m = s.match(/^([a-zA-Z][\w-]*):(\d+)(?:-(\d+))?$/);
+      if (!m) { reportError("cannot parse segment: " + s); continue; }
+      const name = m[1];
+      const from = parseInt(m[2], 10);
+      const to = m[3] ? parseInt(m[3], 10) : from;
+      out.push({ name, from, to });
+    }
+    return out;
+  }
+
+  function parseRange(val) {
+    // Object form: { line: N, label?: "..." }
+    if (val && typeof val === "object" && !Array.isArray(val)) {
+      if (val.line == null) { reportError("region object missing `line`"); return null; }
+      const line = parseInt(val.line, 10);
+      const label = val.label != null ? String(val.label) : null;
+      return { from: line, to: line, label };
+    }
+    const s = String(val).trim();
+    const m = s.match(/^(\d+)(?:-(\d+))?$/);
+    if (!m) { reportError("cannot parse range: " + s); return null; }
+    return { from: parseInt(m[1], 10), to: m[2] ? parseInt(m[2], 10) : parseInt(m[1], 10), label: null };
+  }
+
+  // A step is { entries: [...], transition: {...}|null }.
+  function parseYamlStep(item) {
+    const entries = [];
+    let transition = null;
+    if (item == null || typeof item !== "object") return { entries, transition };
+    if (item.name && item.at != null) {
+      const ranges = Array.isArray(item.at) ? item.at : [item.at];
+      for (const r of ranges) {
+        const range = parseRange(r);
+        if (range) entries.push({ name: item.name, ...range });
+      }
+      if (item.transition) transition = item.transition;
+      return { entries, transition };
+    }
+    for (const [name, val] of Object.entries(item)) {
+      if (name === "transition") { transition = val; continue; }
+      const ranges = Array.isArray(val) ? val : [val];
+      for (const r of ranges) {
+        const range = parseRange(r);
+        if (range) entries.push({ name, ...range });
+      }
+    }
+    return { entries, transition };
+  }
+
+  // Compact-string step: no per-step transition.
+  function parseStringStep(payload) {
+    return { entries: parseStep(payload), transition: null };
+  }
+
+  // parseSpec → { steps, inlineStyles, presets, transition }
+  function parseSpec(spec) {
+    const empty = { steps: [], inlineStyles: {}, presets: null, transition: null };
+    if (!spec) return empty;
+    const trimmed = spec.trim();
+    if (trimmed.startsWith("[") || trimmed.startsWith("{")) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) {
+          return { ...empty, steps: parsed.map(parseYamlStep), transition: null };
+        }
+        const inlineStyles = parsed.styles || {};
+        const presetRaw = parsed.preset;
+        const presets = presetRaw == null ? null
+          : Array.isArray(presetRaw) ? presetRaw
+          : [presetRaw];
+        const transition = parsed.transition || null;
+        const stepsRaw = parsed.steps || parsed.items;
+        if (Array.isArray(stepsRaw)) {
+          return { steps: stepsRaw.map(parseYamlStep), inlineStyles, presets, transition };
+        }
+        const { styles, preset, transition: _t, ...rest } = parsed;
+        return { steps: [parseYamlStep(rest)], inlineStyles, presets, transition };
+      } catch (e) {
+        reportError("invalid JSON spec: " + e.message);
+        return empty;
+      }
+    }
+    return { ...empty, steps: trimmed.split("|").map(parseStringStep) };
+  }
+
+  const MODE_CLASSES = ["cs-mode-none", "cs-mode-fade", "cs-mode-slide", "cs-mode-wipe", "cs-mode-morph"];
+
+  function applyTransition(el, transition) {
+    if (!transition) return;
+    if (transition.duration != null) {
+      const v = typeof transition.duration === "number"
+        ? transition.duration + "ms"
+        : String(transition.duration);
+      el.style.setProperty("--cs-duration", v);
+    }
+    if (transition.easing) {
+      el.style.setProperty("--cs-easing", String(transition.easing));
+    }
+    if (transition.mode) {
+      el.classList.remove(...MODE_CLASSES);
+      el.classList.add("cs-mode-" + transition.mode);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Error reporting
+  // ---------------------------------------------------------------------------
+  let currentBlock = null;
+  let debugMode = false;
+
+  function isDebug() {
+    if (debugMode) return true;
+    return /[?&]cls-debug=1\b/.test(window.location.search);
+  }
+
+  function reportError(msg) {
+    console.warn("[code-line-style] " + msg);
+    if (isDebug() && currentBlock) {
+      let banner = currentBlock.previousElementSibling;
+      if (!banner || !banner.classList || !banner.classList.contains("cs-error")) {
+        banner = document.createElement("div");
+        banner.className = "cs-error";
+        banner.style.cssText =
+          "background:#ffe4e1;color:#a00;border:1px solid #f88;padding:4px 8px;" +
+          "font-family:monospace;font-size:0.8em;margin-bottom:4px;border-radius:3px;";
+        currentBlock.parentElement.insertBefore(banner, currentBlock);
+      }
+      banner.appendChild(document.createTextNode("[code-line-style] " + msg));
+      banner.appendChild(document.createElement("br"));
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // DOM helpers
+  // ---------------------------------------------------------------------------
+  function getLineEls(codeEl) {
+    return Array.from(codeEl.querySelectorAll(":scope > span[id]"));
+  }
+
+  // Attach a label rendered to the right margin, anchored to `el`. The label
+  // node is appended to the nearest `div.sourceCode` and positioned absolutely
+  // based on `el`'s bounding box. The label is announced via the live region.
+  function positionLabel(label, anchor, container) {
+    const cRect = container.getBoundingClientRect();
+    const eRect = anchor.getBoundingClientRect();
+    // Use offsets relative to the container's own coordinate system so reveal's
+    // CSS transform (slide scaling) doesn't distort the math.
+    const scaleY = cRect.height && container.offsetHeight ? container.offsetHeight / cRect.height : 1;
+    const scaleX = cRect.width && container.offsetWidth ? container.offsetWidth / cRect.width : 1;
+    const top = (eRect.top - cRect.top) * scaleY + (eRect.height * scaleY) / 2 - label.offsetHeight / 2;
+    const left = container.offsetWidth + 24;
+    label.style.top = top + "px";
+    label.style.left = left + "px";
+  }
+
+  const positionedLabels = new Set();
+
+  function attachLabel(el, text) {
+    const container = el.closest("div.sourceCode");
+    if (!container) return;
+    const label = document.createElement("span");
+    label.className = "cs-label";
+    label.textContent = text;
+    label._csAnchor = el;
+    label._csContainer = container;
+    container.appendChild(label);
+    positionedLabels.add(label);
+    requestAnimationFrame(() => positionLabel(label, el, container));
+    announce(text);
+  }
+
+  function repositionAllLabels() {
+    for (const label of positionedLabels) {
+      if (!label.isConnected) { positionedLabels.delete(label); continue; }
+      positionLabel(label, label._csAnchor, label._csContainer);
+    }
+  }
+
+  window.addEventListener("resize", repositionAllLabels);
+  if (window.Reveal) {
+    const rl = () => requestAnimationFrame(repositionAllLabels);
+    window.Reveal.on("slidechanged", rl);
+    window.Reveal.on("resize", rl);
+    window.Reveal.on("ready", rl);
+  }
+
+  function clearLabels(container) {
+    container.querySelectorAll(":scope > .cs-label").forEach((n) => {
+      positionedLabels.delete(n);
+      n.remove();
+    });
+  }
+
+  let liveRegion = null;
+  function announce(text) {
+    if (!liveRegion) {
+      liveRegion = document.createElement("div");
+      liveRegion.className = "cs-live";
+      liveRegion.setAttribute("aria-live", "polite");
+      liveRegion.setAttribute("aria-atomic", "true");
+      document.body.appendChild(liveRegion);
+    }
+    liveRegion.textContent = text;
+  }
+
+  // Apply an array of entries against the given line elements using resolve().
+  // Returns the set of (CSS class, prop-name) records touched so we can clear
+  // them later for progressive replace semantics.
+  function applyEntries(lines, entries, resolve) {
+    const touchedClasses = new Set();
+    const touchedProps = new Set();
+    // Per-element accumulator for inline props — later entries win on conflicts.
+    const elementProps = new Map();
+
+    for (const entry of entries) {
+      const { name, from, to, label } = entry;
+      const resolved = resolve(name);
+      if (!resolved) { reportError("unknown style name: " + name); continue; }
+
+      for (let i = from; i <= to; i++) {
+        const lineEl = lines[i - 1];
+        if (!lineEl) { reportError("line out of range: " + i); continue; }
+
+        const targets = [lineEl];
+        if (label) attachLabel(lineEl, label);
+
+        for (const el of targets) {
+          if (resolved.type === "class") {
+            el.classList.add(resolved.cls);
+            touchedClasses.add(resolved.cls);
+          } else {
+            const { props, classes } = expandInlineStyle(resolved.def);
+            for (const c of classes) {
+              el.classList.add(c);
+              touchedClasses.add(c);
+            }
+            const existing = elementProps.get(el) || {};
+            Object.assign(existing, props);
+            elementProps.set(el, existing);
+            for (const k of Object.keys(props)) touchedProps.add(k);
+          }
+          if (resolved.presence === "exit" || resolved.presence === "enter") {
+            // `cs-presence-enter` is the steady "open" state and provides the
+            // target value for transitions in both directions. It stays on the
+            // element across step transitions (see clearAll).
+            el.classList.add("cs-presence-enter");
+          }
+          if (resolved.presence === "exit") {
+            el.classList.add("cs-presence-exit");
+            touchedClasses.add("cs-presence-exit");
+          } else if (resolved.presence === "enter") {
+            el.classList.add("cs-presence-hidden");
+            touchedClasses.add("cs-presence-hidden");
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => el.classList.remove("cs-presence-hidden"));
+            });
+          }
+        }
+      }
+    }
+
+    for (const [el, props] of elementProps) {
+      for (const [k, v] of Object.entries(props)) {
+        el.style.setProperty(k, v);
+      }
+    }
+
+    return { classes: [...touchedClasses], props: [...touchedProps] };
+  }
+
+  function clearAll(lines, touched, container) {
+    for (const el of lines) {
+      if (touched.classes.length) el.classList.remove(...touched.classes);
+      for (const p of touched.props) el.style.removeProperty(p);
+    }
+    if (container) clearLabels(container);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Application
+  // ---------------------------------------------------------------------------
+  function applyStatic(codeEl, step, resolve) {
+    const lines = getLineEls(codeEl);
+    if (step.transition) {
+      for (const line of lines) applyTransition(line, step.transition);
+    }
+    applyEntries(lines, step.entries, resolve);
+  }
+
+  function applyProgressive(preEl, codeEl, steps, resolve) {
+    const lines = getLineEls(codeEl);
+
+    const allTouched = { classes: new Set(), props: new Set() };
+    // Lines touched by any presence style. They get a permanent
+    // `cs-presence-enter` so the transition rule stays active in both
+    // directions; `cs-presence-exit` / `cs-presence-hidden` toggle on top.
+    const presenceLines = new Set();
+
+    for (const step of steps) {
+      for (const { name, from, to } of step.entries) {
+        const r = resolve(name);
+        if (!r) continue;
+        if (r.type === "class") allTouched.classes.add(r.cls);
+        else {
+          const { props, classes } = expandInlineStyle(r.def);
+          for (const c of classes) allTouched.classes.add(c);
+          for (const k of Object.keys(props)) allTouched.props.add(k);
+        }
+        if (r.presence === "exit") {
+          allTouched.classes.add("cs-presence-exit");
+          for (let i = from; i <= to; i++) presenceLines.add(i - 1);
+        } else if (r.presence === "enter") {
+          allTouched.classes.add("cs-presence-hidden");
+          for (let i = from; i <= to; i++) presenceLines.add(i - 1);
+        }
+      }
+    }
+
+    // Seed `cs-presence-enter` once on every presence-affected line; do NOT
+    // clear it between steps — it's the steady-state open marker.
+    for (const idx of presenceLines) {
+      if (lines[idx]) lines[idx].classList.add("cs-presence-enter");
+    }
+    const totalTouched = { classes: [...allTouched.classes], props: [...allTouched.props] };
+
+    const container = codeEl.closest("div.sourceCode");
+    const applyStep = (idx) => {
+      clearAll(lines, totalTouched, container);
+      const step = steps[idx];
+      if (!step) return;
+      if (step.transition) {
+        for (const line of lines) applyTransition(line, step.transition);
+      }
+      applyEntries(lines, step.entries, resolve);
+    };
+
+    applyStep(0);
+
+    for (let i = 1; i < steps.length; i++) {
+      const frag = document.createElement("span");
+      frag.className = "fragment cs-step";
+      frag.setAttribute("data-cs-step", String(i));
+      frag.style.display = "none";
+      preEl.appendChild(frag);
+    }
+
+    if (window.Reveal) {
+      const handler = (e) => {
+        if (!preEl.contains(e.fragment)) return;
+        const idx = parseInt(e.fragment.getAttribute("data-cs-step") || "0", 10);
+        if (e.type === "fragmentshown") applyStep(idx);
+        if (e.type === "fragmenthidden") applyStep(idx - 1);
+      };
+      window.Reveal.on("fragmentshown", handler);
+      window.Reveal.on("fragmenthidden", handler);
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // Entry point
+  // ---------------------------------------------------------------------------
+  // Read an attribute that may appear with or without the `data-` prefix —
+  // Pandoc auto-prefixes custom code-block attributes when emitting HTML, but
+  // users may also author the prefixed form directly.
+  function readAttr(preEl, name) {
+    const wrapper =
+      preEl.closest("[" + name + "], [data-" + name + "]") || preEl;
+    return wrapper.getAttribute(name) || wrapper.getAttribute("data-" + name);
+  }
+
+  function getSpec(preEl) {
+    const spec = readAttr(preEl, "code-line-style");
+    if (spec) return spec;
+    const legacy = readAttr(preEl, "code-line-diff");
+    if (legacy) {
+      reportError("code-line-diff is deprecated, use code-line-style");
+      return legacy.replace(/([+\-!#@]):/g, (_, m) => {
+        return { "+": "add:", "-": "rem:", "!": "chg:", "#": "note:", "@": "hi:" }[m];
+      });
+    }
+    return null;
+  }
+
+  function getPresets(preEl) {
+    const raw = readAttr(preEl, "code-line-style-preset");
+    if (!raw) return ["diff", "emphasis"];
+    return raw.split(/[,\s]+/).filter(Boolean);
+  }
+
+  function getStaticMode(preEl) {
+    const raw = readAttr(preEl, "code-line-style-static");
+    return raw === "merged" ? "merged" : "last";
+  }
+
+  function process() {
+    const blocks = document.querySelectorAll("pre > code, div.sourceCode pre > code");
+    blocks.forEach((codeEl) => {
+      const preEl = codeEl.parentElement;
+      currentBlock = preEl.closest("div.sourceCode") || preEl;
+      const spec = getSpec(preEl);
+      if (!spec) { currentBlock = null; return; }
+      const { steps, inlineStyles, presets, transition } = parseSpec(spec);
+      if (steps.length === 0) { currentBlock = null; return; }
+      const presetNames = presets || getPresets(preEl);
+      const resolve = makeResolver(presetNames, inlineStyles);
+      if (transition) {
+        const codeEl2 = codeEl;
+        for (const line of getLineEls(codeEl2)) applyTransition(line, transition);
+      }
+
+      if (steps.length === 1) {
+        applyStatic(codeEl, steps[0], resolve);
+      } else if (window.Reveal) {
+        applyProgressive(preEl, codeEl, steps, resolve);
+      } else {
+        // No Reveal → no fragments. Pick a static collapse strategy.
+        const mode = getStaticMode(preEl);
+        if (mode === "merged") {
+          const merged = { entries: steps.flatMap(s => s.entries), transition: null };
+          applyStatic(codeEl, merged, resolve);
+        } else {
+          applyStatic(codeEl, steps[steps.length - 1], resolve);
+        }
+      }
+      currentBlock = null;
+    });
+  }
+
+  if (window.Reveal) {
+    if (window.Reveal.isReady && window.Reveal.isReady()) process();
+    else window.Reveal.on("ready", process);
+  } else {
+    document.addEventListener("DOMContentLoaded", process);
+  }
+})();
+</script>
+
+
+
+
+</body></html>
